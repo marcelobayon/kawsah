@@ -1,0 +1,59 @@
+---
+import Page from "../layouts/Page.astro";
+import RouteCard from "../components/RouteCard.astro";
+import NextStep from "../components/NextStep.astro";
+import Disclaimer from "../components/Disclaimer.astro";
+import { getRoute } from "../data/routes.js";
+import { routes as pickRoutes } from "../data/assets.js";
+
+const route = getRoute("KAWSAH_REFINANCE");
+const tools = pickRoutes(["KAWSAH_REFI_BREAKEVEN", "KAWSAH_MORTGAGE_PAYMENT"]);
+const goals = [
+  { h: "Lower the monthly payment", p: "A lower rate or longer term can reduce your payment — but resetting the term can cost more interest overall." },
+  { h: "Pay it off faster", p: "Moving to a shorter term usually raises the payment while cutting total interest." },
+  { h: "Tap equity (cash-out)", p: "Borrow against equity for a specific purpose. Weigh the new payment against the benefit." },
+  { h: "Change loan type", p: "For example, moving off an adjustable rate for more predictability." },
+];
+---
+<Page
+  title="Refinance — does it actually make sense?"
+  seoTitle="Refinance"
+  description="Refinancing only helps if the math works for how long you'll keep the loan. Clarify your goal, run the break-even, and see the payment before you decide."
+  eyebrow="Refinance"
+  lede="Refinancing isn't automatically a win. It's worth it when the savings outrun the costs before you'd sell or refinance again. Here's how to check."
+  breadcrumbs={[{ label: "Home", href: "/" }, { label: "Refinance" }]}
+>
+  <section class="section tight">
+    <div class="container">
+      <h2>Start with your goal</h2>
+      <p class="lede" style="margin-top:.5rem">Different goals lead to different math. Pick the one that fits.</p>
+      <div class="grid cols-2" style="margin-top:1.4rem">
+        {goals.map((g) => (
+          <div class="card"><h3>{g.h}</h3><p class="muted">{g.p}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section tight paper">
+    <div class="container">
+      <h2>Run the numbers before you commit</h2>
+      <div class="flow" style="margin:1.1rem 0 1.6rem">
+        <span class="node">Know your current terms</span><span class="sep">→</span>
+        <span class="node">Estimate the new payment</span><span class="sep">→</span>
+        <span class="node">Find your break-even</span><span class="sep">→</span>
+        <span class="node">Decide</span>
+      </div>
+      <div class="grid cols-2">
+        {tools.map((r) => <RouteCard route={r} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section tight">
+    <div class="container">
+      <NextStep route={route} />
+      <div style="margin-top:1.5rem"><Disclaimer variant="general" /></div>
+    </div>
+  </section>
+</Page>

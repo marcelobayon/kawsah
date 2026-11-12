@@ -1,0 +1,25 @@
+---
+import Page from "../layouts/Page.astro";
+import ToolLanding from "../components/ToolLanding.astro";
+---
+<Page
+  title="Recipe Dashboard"
+  seoTitle="Recipe Dashboard"
+  description="Keep every recipe in one searchable, tagged place instead of scattered links and screenshots — a homeowner-life template you own in your own Notion workspace."
+  eyebrow="Homeowner Tools"
+  lede="Your recipes shouldn't live in fifteen browser tabs and a text to yourself. Put them in one place you'll actually reopen."
+  breadcrumbs={[{ label: "Home", href: "/" }, { label: "Homeowner Tools", href: "/homeowner-tools/" }, { label: "Recipes" }]}
+>
+  <ToolLanding
+    routeId="KAWSAH_RECIPE_DASHBOARD"
+    getLabel="Organize your recipes"
+    intro="One tidy home for the recipes you cook — searchable, taggable, and easy to plan meals from."
+    features={[
+      { h: "Everything in one place", p: "Paste, save, or write recipes and find them again in seconds." },
+      { h: "Tag & search", p: "Filter by meal, cuisine, effort, or diet when you're deciding." },
+      { h: "Feeds your meal plan", p: "Pull saved recipes straight into your weekly plan." },
+    ]}
+    flow={["Save", "Tag", "Plan meals"]}
+    connects={["KAWSAH_MEAL_PLANNING", "KAWSAH_HOME_MANAGEMENT"]}
+  />
+</Page>

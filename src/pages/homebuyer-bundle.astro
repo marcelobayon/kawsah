@@ -1,0 +1,26 @@
+---
+import Page from "../layouts/Page.astro";
+import ToolLanding from "../components/ToolLanding.astro";
+---
+<Page
+  title="Homebuyer Bundle"
+  seoTitle="Homebuyer Bundle"
+  description="Everything Kawsah offers buyers and new homeowners in one bundle — calculators, House Hunting Dashboard, Purchase Playbook, and the homeowner tools. Pricing coming soon."
+  eyebrow="Bundle"
+  lede="Want it all in one place? The Homebuyer Bundle brings together the tools for buying a home and running it once you're in."
+  breadcrumbs={[{ label: "Home", href: "/" }, { label: "Homebuyer Bundle" }]}
+>
+  <ToolLanding
+    routeId="KAWSAH_HOMEBUYER_BUNDLE"
+    productKey="homebuyerBundle"
+    notion={false}
+    getLabel="Get the Homebuyer Bundle"
+    intro="The full buyer-to-homeowner set: the planning calculators, the House Hunting Dashboard, the Purchase Playbook, and the homeowner tools you'll use long after closing."
+    features={[
+      { h: "Plan with confidence", p: "Affordability, payment, and cash-to-close tools so you shop in your real range." },
+      { h: "Shop & buy", p: "House Hunting Dashboard and the Purchase Playbook to run the whole process." },
+      { h: "Own with ease", p: "The homeowner tools — management, inventory, and more — for after you get the keys." },
+    ]}
+    connects={["KAWSAH_HOUSE_HUNTING", "KAWSAH_PURCHASE_PLAYBOOK", "KAWSAH_HOME_MANAGEMENT"]}
+  />
+</Page>

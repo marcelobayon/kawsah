@@ -1,0 +1,11 @@
+---
+import { SHARED_DISCLAIMER } from "../lib/routeEngine.js";
+const { variant = "general" } = Astro.props;
+const text =
+  variant === "calc"
+    ? "This is an estimate for planning and education only, based on the assumptions shown. It is not a loan offer, approval, rate lock, or guarantee. Your actual numbers depend on lender and program requirements and verification of your information. Consult a qualified professional about your situation."
+    : variant === "route"
+      ? SHARED_DISCLAIMER
+      : "Kawsah provides education and navigation tools. Nothing here is a loan offer, approval, or a guarantee of eligibility, savings, rates, or closing times. Consult a qualified professional about your specific situation.";
+---
+<p class="disclaimer"><strong>Important:</strong> {text}</p>

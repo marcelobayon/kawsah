@@ -1,0 +1,118 @@
+---
+/* Reusable body for Kawsah template/dashboard products (house hunting,
+   purchase playbook, homeowner tools). Handles the free (lead-gen) vs paid
+   (checkout) product mode from CONFIG without any redesign. */
+import RouteCard from "./RouteCard.astro";
+import NextStep from "./NextStep.astro";
+import Disclaimer from "./Disclaimer.astro";
+import Button from "./Button.astro";
+import LeadForm from "./LeadForm.astro";
+import { getRoute } from "../data/routes.js";
+import { routes as pickRoutes } from "../data/assets.js";
+import { CONFIG, isSet } from "../config/config.js";
+
+const {
+  routeId,
+  intro,
+  features = [],
+  flow = [],
+  notion = true,
+  productKey = null,
+  connects = [],
+  getLabel,
+} = Astro.props;
+
+const route = getRoute(routeId);
+const product = (productKey && CONFIG.products[productKey]) || { mode: "free", price: null, checkoutUrl: "" };
+const isPaid = product.mode === "paid";
+const hasCheckout = isSet(product.checkoutUrl);
+const connectRoutes = pickRoutes(connects);
+const formName = routeId.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+const getCta = getLabel || route?.primaryCTA || "Get it";
+const viewEvent = route?.type === "bundle" ? "product_viewed" : "tool_viewed";
+---
+<section class="section tight">
+  <div class="container">
+    <span
+      hidden
+      data-page-view={viewEvent}
+      data-pv-route={route?.id}
+      data-pv-stage={route?.lifecycleStage}
+      data-pv-intent={route?.audience}
+      data-pv-asset={route?.type}
+    ></span>
+    <p style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
+      <span class={`pill ${isPaid ? "paid" : "free"}`}>{isPaid ? "Paid product" : "Free resource"}</span>
+      {isPaid && (product.price ? <span class="pill">{product.price}</span> : <span class="pill">Pricing coming soon</span>)}
+    </p>
+    {intro && <p class="lede measure" style="margin-top:.8rem">{intro}</p>}
+
+    {features.length > 0 && (
+      <div class="grid cols-3" style="margin-top:2rem">
+        {features.map((f) => (
+          <div class="card"><h3>{f.h}</h3><p class="muted">{f.p}</p></div>
+        ))}
+      </div>
+    )}
+
+    {flow.length > 0 && (
+      <div class="flow" style="margin-top:2rem">
+        {flow.map((n, i) => <>{i > 0 && <span class="sep" aria-hidden="true">→</span>}<span class="node">{n}</span></>)}
+      </div>
+    )}
+
+    {notion && (
+      <p class="muted" style="margin-top:1.6rem;max-width:70ch">
+        <strong>How it's delivered:</strong> this is a template you use in your own Notion workspace —
+        you keep full control of your data in your own account. Kawsah doesn't store your entries.
+      </p>
+    )}
+  </div>
+</section>
+
+<section class="section tight paper">
+  <div class="container narrow">
+    {isPaid && hasCheckout ? (
+      <div class="card center">
+        <h2>{getCta}</h2>
+        {product.price && <p class="lede center">{product.price}</p>}
+        <div class="btn-row" style="justify-content:center;margin-top:1rem">
+          <Button href={product.checkoutUrl} variant="accent" size="lg" external={true} gaEvent="checkout_started" gaProduct={productKey} gaCta={getCta}>{getCta}</Button>
+        </div>
+      </div>
+    ) : (
+      <div class="card">
+        <LeadForm
+          name={formName}
+          heading={isPaid ? "Join the waitlist" : getCta}
+          subtext={isPaid
+            ? "Pricing isn't finalized yet — leave your email and we'll let you know the moment it's ready."
+            : "Enter your email and we'll send you the template plus the setup guide."}
+          cta={isPaid ? "Notify me" : "Send it to me"}
+          source={formName}
+          tool={route?.title}
+          message={false}
+        />
+      </div>
+    )}
+  </div>
+</section>
+
+{connectRoutes.length > 0 && (
+  <section class="section tight">
+    <div class="container">
+      <h2>Where this leads next</h2>
+      <p class="lede" style="margin-top:.5rem">Kawsah connects each tool to your logical next step.</p>
+      <div class="grid cols-3" style="margin-top:1.4rem">
+        {connectRoutes.map((r) => <RouteCard route={r} />)}
+      </div>
+    </div>
+  </section>
+)}
+
+<section class="section tight">
+  <div class="container">
+    <NextStep route={route} />
+    <div style="margin-top:1.4rem"><Disclaimer variant="general" /></div>
+  </div>
+</section>

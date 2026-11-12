@@ -1,0 +1,39 @@
+---
+import Base from "./Base.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+
+const {
+  title,
+  seoTitle,
+  description,
+  eyebrow,
+  lede,
+  breadcrumbs = [],
+  jsonLd,
+  image,
+  viewEvent,
+  route,
+} = Astro.props;
+---
+<Base title={seoTitle || title} description={description} image={image} jsonLd={jsonLd}>
+  <section class="section tight page-hero">
+    <div class="container">
+      {viewEvent && (
+        <span
+          hidden
+          data-page-view={viewEvent}
+          data-pv-route={route?.id}
+          data-pv-stage={route?.lifecycleStage}
+          data-pv-intent={route?.audience}
+          data-pv-asset={route?.type}
+        ></span>
+      )}
+      <Breadcrumbs items={breadcrumbs} />
+      {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+      <h1>{title}</h1>
+      {lede && <p class="lede">{lede}</p>}
+      <slot name="hero-extra" />
+    </div>
+  </section>
+  <slot />
+</Base>

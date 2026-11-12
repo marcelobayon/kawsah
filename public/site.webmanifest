@@ -1,0 +1,13 @@
+{
+  "name": "Kawsah",
+  "short_name": "Kawsah",
+  "description": "Mortgage intelligence and homeownership navigation.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FEFEFE",
+  "theme_color": "#114844",
+  "icons": [
+    { "src": "/logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

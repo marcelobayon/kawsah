@@ -1,0 +1,80 @@
+---
+import Page from "../layouts/Page.astro";
+import Button from "../components/Button.astro";
+import LeadForm from "../components/LeadForm.astro";
+import Disclaimer from "../components/Disclaimer.astro";
+import { CONFIG, isSet } from "../config/config.js";
+
+const c = CONFIG.contact;
+const bring = [
+  "A rough idea of your target price or current loan",
+  "Your income sources (we'll guide self-employed docs separately)",
+  "Recent pay or business documentation when you have it",
+  "Your questions — there's no wrong one",
+];
+---
+<Page
+  title="Ready when you are"
+  seoTitle="Apply or Book a Call"
+  description="Start a mortgage application on your own time, or book a 15-minute call to talk through your options. No pressure, no obligation."
+  eyebrow="Get connected"
+  lede="Two ways forward: start an application whenever it suits you, or book a short call first. Either is fine — there's no obligation."
+  breadcrumbs={[{ label: "Home", href: "/" }, { label: "Apply" }]}
+>
+  <section class="section tight">
+    <div class="container">
+      <div class="grid cols-2" style="align-items:start">
+        <div class="card">
+          <span class="pill">Do it now</span>
+          <h3 style="margin-top:.6rem">Start your application</h3>
+          <p class="muted">A short intake you can complete right here. It helps us understand your situation before we talk — no account, no obligation.</p>
+          <LeadForm
+            name="start-application"
+            application={true}
+            cta="Submit application"
+            source="apply_page"
+            message={true}
+          />
+        </div>
+        <div class="card">
+          <span class="pill">Talk first</span>
+          <h3 style="margin-top:.6rem">Book a 15-minute call</h3>
+          <p class="muted">Prefer to ask questions before anything else? Grab a short call at a time that works for you.</p>
+          <div class="card-cta">
+            {isSet(c.bookingUrl) ? (
+              <Button href={c.bookingUrl} variant="outline" size="lg" external={true} gaEvent="booking_cta_clicked" gaCta="Book a call">
+                Book a Call
+              </Button>
+            ) : (
+              <span class="muted">Booking link coming soon.</span>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section tight paper">
+    <div class="container">
+      <div class="grid cols-2" style="align-items:start">
+        <div>
+          <h2>Helpful to have on hand</h2>
+          <p class="muted" style="margin-top:.4rem">Don't have everything? Start anyway — we'll fill gaps together.</p>
+          <ul class="steps" style="margin-top:1rem">
+            {bring.map((b) => <li><div><p style="color:var(--ink);font-size:var(--step-0)">{b}</p></div></li>)}
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Rather just reach out?</h3>
+          <p class="muted">We're happy to help directly.</p>
+          <ul class="result-rows" style="margin-top:.6rem">
+            {isSet(c.email) && <li><span>Email</span><span><a href={`mailto:${c.email}`}>{c.email}</a></span></li>}
+            {isSet(c.phoneDisplay) && <li><span>Phone</span><span><a href={c.phoneHref}>{c.phoneDisplay}</a></span></li>}
+          </ul>
+          <p class="muted" style="margin-top:1rem;font-size:var(--step--1)">{CONFIG.license.originator} · NMLS #{CONFIG.license.nmls}</p>
+        </div>
+      </div>
+      <div style="margin-top:1.6rem"><Disclaimer variant="general" /></div>
+    </div>
+  </section>
+</Page>

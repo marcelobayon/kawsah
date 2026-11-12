@@ -1,0 +1,126 @@
+---
+import Page from "../layouts/Page.astro";
+import NextStep from "../components/NextStep.astro";
+import Disclaimer from "../components/Disclaimer.astro";
+import { getRoute, resolveNext } from "../data/routes.js";
+import { CONFIG } from "../config/config.js";
+
+const route = getRoute("KAWSAH_AFFORDABILITY");
+const next = resolveNext(route);
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "Kawsah Affordability Calculator",
+  applicationCategory: "FinanceApplication",
+  operatingSystem: "Web",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+  url: `${CONFIG.brand.domain}/affordability/`,
+};
+---
+<Page
+  title="How much house can you afford?"
+  seoTitle="Affordability Calculator"
+  description="Estimate a comfortable home price from your income, debts, down payment, and rate. A planning estimate — not a loan approval."
+  eyebrow="Calculator"
+  lede="A quick, honest estimate of the price range that fits your income — not the maximum a lender might stretch you to."
+  breadcrumbs={[{ label: "Home", href: "/" }, { label: "Tools", href: "/route-finder/" }, { label: "Affordability" }]}
+  jsonLd={jsonLd}
+>
+  <section class="section tight">
+    <div class="container">
+      <div class="calc">
+        <form class="calc-inputs" id="calc-form">
+          <div class="field">
+            <label for="annualIncome">Annual household income ($)</label>
+            <input id="annualIncome" name="annualIncome" type="number" inputmode="numeric" min="0" step="1000" value="120000" />
+          </div>
+          <div class="field">
+            <label for="monthlyDebts">Monthly debt payments ($)</label>
+            <input id="monthlyDebts" name="monthlyDebts" type="number" inputmode="numeric" min="0" step="25" value="500" />
+            <span class="hint">Car loans, student loans, credit cards, etc. — not rent.</span>
+          </div>
+          <div class="field">
+            <label for="downPayment">Down payment available ($)</label>
+            <input id="downPayment" name="downPayment" type="number" inputmode="numeric" min="0" step="1000" value="40000" />
+          </div>
+          <div class="form-grid">
+            <div class="field">
+              <label for="annualRatePct">Interest rate (%)</label>
+              <input id="annualRatePct" name="annualRatePct" type="number" inputmode="decimal" min="0" step="0.125" value="6.5" />
+            </div>
+            <div class="field">
+              <label for="termYears">Loan term</label>
+              <select id="termYears" name="termYears">
+                <option value="30" selected>30 years</option>
+                <option value="20">20 years</option>
+                <option value="15">15 years</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="maxDti">Max debt-to-income (%)</label>
+            <input id="maxDti" name="maxDti" type="number" inputmode="numeric" min="10" max="60" step="1" value="43" />
+            <span class="hint">Many programs land near 43%. Lower = more conservative.</span>
+          </div>
+          <p class="hint">Adjust any field — results update instantly.</p>
+        </form>
+
+        <div class="calc-output" role="status" aria-live="polite">
+          <p class="result-label">Estimated comfortable price</p>
+          <div class="result-figure" id="out-price">—</div>
+          <ul class="result-rows">
+            <li><span>Estimated loan amount</span><span id="out-loan">—</span></li>
+            <li><span>Max monthly payment (PITI)</span><span id="out-pay">—</span></li>
+            <li><span>Down payment used</span><span id="out-down">—</span></li>
+          </ul>
+          <p class="result-label" style="margin-top:1rem">Assumptions</p>
+          <ul class="assume" id="out-assume"></ul>
+          <div class="card-cta">
+            <a class="btn btn-primary" href={next.href} data-ga-event="calculator_cta_clicked" data-ga-route={route.id} data-ga-cta={route.primaryCTA} data-ga-tool={route.title}>{next.label} →</a>
+          </div>
+          <div style="margin-top:1rem"><Disclaimer variant="calc" /></div>
+        </div>
+      </div>
+
+      <div style="margin-top:1.6rem"><NextStep route={route} /></div>
+    </div>
+  </section>
+</Page>
+
+<script>
+  import { calculateAffordability } from "../lib/calc-network.js";
+  import { readNum, fmtMoney, setText, setList, debounce } from "../lib/calc-ui.js";
+  import { track } from "../lib/analytics.js";
+
+  const TOOL = "Affordability Calculator";
+  const form = document.getElementById("calc-form");
+  if (form) {
+    let started = false;
+    const done = debounce(() => track("calculator_completed", { tool_name: TOOL }), 900);
+
+    function run() {
+      const r = calculateAffordability({
+        annualIncome: readNum(form, "annualIncome"),
+        monthlyDebts: readNum(form, "monthlyDebts"),
+        downPayment: readNum(form, "downPayment"),
+        annualRatePct: readNum(form, "annualRatePct", 6.5),
+        termYears: readNum(form, "termYears", 30),
+        maxBackEndDTI: readNum(form, "maxDti", 43) / 100,
+      });
+      setText("out-price", fmtMoney(r.estimatedPrice));
+      setText("out-loan", fmtMoney(r.estimatedLoan));
+      setText("out-pay", fmtMoney(r.maxMonthlyPayment));
+      setText("out-down", fmtMoney(r.downPayment));
+      setList("out-assume", r.assumptions);
+    }
+
+    form.addEventListener("input", () => {
+      if (!started) { started = true; track("calculator_started", { tool_name: TOOL }); }
+      run();
+      done();
+    });
+
+    track("calculator_viewed", { tool_name: TOOL });
+    run();
+  }
+</script>

@@ -1,0 +1,144 @@
+{
+  "name": "Kawsah Tools",
+  "version": "1.0.0",
+  "description": "Educational mortgage-planning tools. Estimates only — not loan offers, approvals, or eligibility determinations. Functions live in src/lib/calc-network.js and are UI-free/pure so they can be exposed to compatible systems later.",
+  "homepage": "https://www.kawsah.com",
+  "tools": [
+    {
+      "name": "calculateAffordability",
+      "description": "Estimate a home purchase price from user-provided income, debts, down payment, and rate assumptions.",
+      "inputs": [
+        "annualIncome",
+        "monthlyDebts",
+        "downPayment",
+        "annualRatePct",
+        "termYears",
+        "maxBackEndDTI"
+      ]
+    },
+    {
+      "name": "calculateMortgagePayment",
+      "description": "Estimate a monthly mortgage payment (principal & interest, optionally taxes, insurance, HOA, PMI).",
+      "inputs": [
+        "loanAmount",
+        "annualRatePct",
+        "termYears",
+        "propertyTaxAnnual",
+        "homeInsuranceAnnual",
+        "hoaMonthly",
+        "pmiMonthly"
+      ]
+    },
+    {
+      "name": "calculateCashToClose",
+      "description": "Estimate cash needed to close: down payment plus closing costs and prepaids, less credits.",
+      "inputs": [
+        "purchasePrice",
+        "downPaymentPct",
+        "downPaymentAmount",
+        "closingCostPct",
+        "prepaidsEstimate",
+        "sellerCredits",
+        "earnestMoneyPaid"
+      ]
+    },
+    {
+      "name": "calculateRefiBreakeven",
+      "description": "Estimate the number of months required to recover refinance closing costs from monthly savings.",
+      "inputs": [
+        "currentPayment",
+        "newPayment",
+        "closingCosts",
+        "newLoanAmount",
+        "newRatePct",
+        "newTermYears"
+      ]
+    },
+    {
+      "name": "calculateDTI",
+      "description": "Estimate front-end and back-end debt-to-income ratios from monthly income, debts, and housing payment.",
+      "inputs": [
+        "monthlyIncome",
+        "monthlyDebts",
+        "proposedHousingPayment"
+      ]
+    },
+    {
+      "name": "calculateDownPayment",
+      "description": "Convert between a down payment percentage and dollar amount for a given price.",
+      "inputs": [
+        "price",
+        "pct",
+        "amount"
+      ]
+    },
+    {
+      "name": "findKawsahRoute",
+      "description": "Identify the appropriate educational/financing-navigation route from a user's stated intent. Navigation only; never an eligibility decision.",
+      "inputs": [
+        "goal",
+        "firstTime",
+        "stage",
+        "selfEmployed",
+        "incomeDoc",
+        "challenge",
+        "foreignNational",
+        "units",
+        "homeowner"
+      ]
+    }
+  ],
+  "disclaimer": "All tools produce estimates for education and planning. Results depend on assumptions and do not represent loan offers, approvals, rates, or guarantees.",
+  "plannedFunctions": [
+    {
+      "name": "calculateQualifyingIncome",
+      "status": "planned",
+      "description": "Estimate qualifying income for self-employed borrowers (specialized — see Mitig8)."
+    },
+    {
+      "name": "expenseTracking",
+      "status": "planned",
+      "description": "Structured expense-tracking workspace."
+    },
+    {
+      "name": "findBusinessCapitalRoute",
+      "status": "planned",
+      "description": "Route business-capital needs to the right funding pathway."
+    },
+    {
+      "name": "findFinancialReadinessRoute",
+      "status": "planned",
+      "description": "Route a user to financial-readiness resources based on their obstacle."
+    },
+    {
+      "name": "findHomeownerRoute",
+      "status": "planned",
+      "description": "Route across the homeowner lifecycle."
+    },
+    {
+      "name": "findInvestmentRoute",
+      "status": "planned",
+      "description": "Route investment-property scenarios to the right financing pathway."
+    },
+    {
+      "name": "findProfessionalRoute",
+      "status": "planned",
+      "description": "Route real-estate professionals to the right toolkit."
+    },
+    {
+      "name": "homeownerToolRoute",
+      "status": "planned",
+      "description": "Route homeowners to the right post-close tool."
+    },
+    {
+      "name": "houseHuntingWorkspace",
+      "status": "planned",
+      "description": "Organize and compare candidate homes in a workspace."
+    },
+    {
+      "name": "lifeManagementRoute",
+      "status": "planned",
+      "description": "Route to household / life-organization tools."
+    }
+  ]
+}

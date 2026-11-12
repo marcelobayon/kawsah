@@ -1,0 +1,108 @@
+---
+import Page from "../layouts/Page.astro";
+import NextStep from "../components/NextStep.astro";
+import Disclaimer from "../components/Disclaimer.astro";
+import { getRoute, resolveNext } from "../data/routes.js";
+import { CONFIG } from "../config/config.js";
+
+const route = getRoute("KAWSAH_REFI_BREAKEVEN");
+const next = resolveNext(route);
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "Kawsah Refinance Break-Even Calculator",
+  applicationCategory: "FinanceApplication",
+  operatingSystem: "Web",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+  url: `${CONFIG.brand.domain}/refi-breakeven/`,
+};
+---
+<Page
+  title="Refinance break-even calculator"
+  seoTitle="Refinance Break-Even Calculator"
+  description="See how many months it takes to recover refinance closing costs from your monthly savings. If you'd move before then, refinancing may not pay off. Estimate only."
+  eyebrow="Calculator"
+  lede="Refinancing has upfront costs. This shows how long it takes for the monthly savings to pay those costs back — your break-even point."
+  breadcrumbs={[{ label: "Home", href: "/" }, { label: "Tools", href: "/route-finder/" }, { label: "Refinance Break-Even" }]}
+  jsonLd={jsonLd}
+>
+  <section class="section tight">
+    <div class="container">
+      <div class="calc">
+        <form class="calc-inputs" id="calc-form">
+          <div class="field">
+            <label for="currentPayment">Current monthly payment ($)</label>
+            <input id="currentPayment" name="currentPayment" type="number" inputmode="numeric" min="0" step="25" value="2100" />
+            <span class="hint">Use principal &amp; interest for the cleanest comparison.</span>
+          </div>
+          <div class="field">
+            <label for="newPayment">New monthly payment ($)</label>
+            <input id="newPayment" name="newPayment" type="number" inputmode="numeric" min="0" step="25" value="1850" />
+            <span class="hint">Estimate it with the <a href="/mortgage-payment/">payment calculator</a> if you're not sure.</span>
+          </div>
+          <div class="field">
+            <label for="closingCosts">Refinance closing costs ($)</label>
+            <input id="closingCosts" name="closingCosts" type="number" inputmode="numeric" min="0" step="100" value="6000" />
+          </div>
+        </form>
+
+        <div class="calc-output" role="status" aria-live="polite">
+          <p class="result-label">Break-even</p>
+          <div class="result-figure" id="out-months">—</div>
+          <ul class="result-rows">
+            <li><span>Monthly savings</span><span id="out-savings">—</span></li>
+            <li><span>Break-even (years)</span><span id="out-years">—</span></li>
+            <li><span>Closing costs</span><span id="out-costs">—</span></li>
+          </ul>
+          <p class="assume" id="out-note"></p>
+          <div class="card-cta">
+            <a class="btn btn-primary" href={next.href} data-ga-event="calculator_cta_clicked" data-ga-route={route.id} data-ga-cta={route.primaryCTA} data-ga-tool={route.title}>{next.label} →</a>
+          </div>
+          <div style="margin-top:1rem"><Disclaimer variant="calc" /></div>
+        </div>
+      </div>
+
+      <div style="margin-top:1.6rem"><NextStep route={route} /></div>
+    </div>
+  </section>
+</Page>
+
+<script>
+  import { calculateRefiBreakeven } from "../lib/calc-network.js";
+  import { readNum, fmtMoney, setText, debounce } from "../lib/calc-ui.js";
+  import { track } from "../lib/analytics.js";
+
+  const TOOL = "Refinance Break-Even Calculator";
+  const form = document.getElementById("calc-form");
+  if (form) {
+    let started = false;
+    const done = debounce(() => track("calculator_completed", { tool_name: TOOL }), 900);
+
+    function run() {
+      const r = calculateRefiBreakeven({
+        currentPayment: readNum(form, "currentPayment"),
+        newPayment: readNum(form, "newPayment"),
+        closingCosts: readNum(form, "closingCosts"),
+      });
+      setText("out-savings", fmtMoney(r.monthlySavings));
+      setText("out-costs", fmtMoney(r.closingCosts));
+      if (r.savesMoney && r.breakevenMonths != null) {
+        setText("out-months", `${r.breakevenMonths} mo`);
+        setText("out-years", `${r.breakevenYears} yrs`);
+        setText("out-note", `You recover your costs after about ${r.breakevenMonths} months. Refinancing tends to pay off only if you keep the loan past that point.`);
+      } else {
+        setText("out-months", "No break-even");
+        setText("out-years", "—");
+        setText("out-note", "At these numbers the new payment isn't lower, so there's nothing to recover. A refinance may still make sense for other goals (shorter term, cash-out) — but not on payment savings alone.");
+      }
+    }
+
+    form.addEventListener("input", () => {
+      if (!started) { started = true; track("calculator_started", { tool_name: TOOL }); }
+      run();
+      done();
+    });
+    track("calculator_viewed", { tool_name: TOOL });
+    run();
+  }
+</script>

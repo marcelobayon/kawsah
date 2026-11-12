@@ -1,0 +1,276 @@
+---
+import Base from "../layouts/Base.astro";
+import Button from "../components/Button.astro";
+import RouteCard from "../components/RouteCard.astro";
+import EcosystemCard from "../components/EcosystemCard.astro";
+import { CONFIG } from "../config/config.js";
+import { routes as pickRoutes, FEATURED_CALCULATORS } from "../data/assets.js";
+
+const calcs = pickRoutes(FEATURED_CALCULATORS);
+
+const door1 = [
+  { label: "Buy a Home", href: "/purchase/" },
+  { label: "Refinance", href: "/refinance/" },
+  { label: "Investment Property", href: "/route-finder/?goal=investment" },
+  { label: "Business Financing", href: "/route-finder/?goal=business" },
+];
+const door2 = [
+  { label: "Find My Financing Path", href: "/route-finder/" },
+  { label: "I'm a First-Time Buyer", href: "/first-time-buyer/" },
+  { label: "I'm Self-Employed", href: "/self-employed/" },
+  { label: "I'm Not Sure I'm Financially Ready", href: "/financial-readiness/" },
+  { label: "I'm Already Looking at Homes", href: "/house-hunting/" },
+];
+
+const site = CONFIG.brand.domain;
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": ["Organization", "FinancialService"],
+    name: CONFIG.brand.name,
+    url: site,
+    logo: `${site}/logo.png`,
+    description: CONFIG.brand.description,
+    email: CONFIG.contact.email,
+    telephone: CONFIG.contact.phoneDisplay,
+    areaServed: "US",
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: CONFIG.contact.address.city,
+      addressRegion: CONFIG.contact.address.region,
+      addressCountry: CONFIG.contact.address.country,
+    },
+    founder: { "@type": "Person", name: CONFIG.license.originator },
+    foundingDate: String(CONFIG.brand.founded || ""),
+    sameAs: Object.values(CONFIG.social || {}).filter(Boolean),
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: CONFIG.brand.name,
+    url: site,
+  },
+];
+
+const FAQ_ITEMS = [
+  {
+    q: "How much home can I afford?",
+    a: "It depends on your income, debts, down payment, and rate. The free affordability calculator gives you a comfortable estimate in seconds — a planning estimate, not a loan approval.",
+    href: "/affordability/",
+    cta: "Try the affordability calculator",
+  },
+  {
+    q: "I'm self-employed — can I still get a mortgage?",
+    a: "Often, yes. What matters is how your income is documented. Kawsah's self-employed path helps you see whether tax-return income (via Mitig8) or alternative documentation (via NonQM Capital) fits your situation.",
+    href: "/self-employed/",
+    cta: "See the self-employed path",
+  },
+  {
+    q: "Do Kawsah's tools cost anything?",
+    a: "The calculators and the Route Finder are free. Some templates and bundles are or will be paid — each one is clearly labeled before you commit to anything.",
+    href: "/route-finder/",
+    cta: "Find my path",
+  },
+  {
+    q: "Is Kawsah a lender?",
+    a: "Kawsah is a mortgage-intelligence and navigation platform led by a licensed loan originator (NMLS #1851997). It helps you understand your options and connects you to financing — it does not approve loans or guarantee terms.",
+    href: "/who-marcelo-is/",
+    cta: "Who's behind Kawsah",
+  },
+];
+const faqLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQ_ITEMS.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
+jsonLd.push(faqLd);
+---
+<Base
+  title={null}
+  description={CONFIG.brand.description}
+  jsonLd={jsonLd}
+>
+  <!-- Hero -->
+  <section class="section paper hero">
+    <div class="container home-hero">
+      <div class="hero-inner">
+        <p class="eyebrow">Mortgage intelligence + financing route graph</p>
+        <h1>Understand your options. Know your next move.</h1>
+        <p class="lede">
+          Kawsah helps you organize your home‑buying journey, find the tool or answer you
+          need right now, and connect to the right financing path when you're ready —
+          instead of drowning in mortgage jargon.
+        </p>
+        <div class="btn-row">
+          <Button href="/route-finder/" variant="accent" size="lg" gaEvent="route_started" gaAsset="homepage" gaCta="Find My Path">
+            Find My Path
+          </Button>
+          <Button href="/apply/" variant="outline" size="lg" gaCta="I'm ready to apply">
+            I'm Ready to Apply
+          </Button>
+        </div>
+        <p class="muted" style="margin-top:1.1rem;font-size:var(--step--1)">
+          {CONFIG.license.originator} · NMLS #{CONFIG.license.nmls} · {CONFIG.contact.address.city}, {CONFIG.contact.address.region}
+        </p>
+      </div>
+      <div class="hero-logo">
+        <img src="/logo.png" alt="Kawsah — Your Path to Homeownership" width="360" height="360" fetchpriority="high" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Two doors -->
+  <section class="section">
+    <div class="container">
+      <div class="center" style="margin-bottom:2rem">
+        <p class="eyebrow">Two ways in</p>
+        <h2>Start wherever you are</h2>
+        <p class="lede center">Some people know exactly what they want. Others just know they want to buy a home someday. Both start here.</p>
+      </div>
+      <div class="grid cols-2">
+        <div class="door">
+          <h2>I Know What I Want</h2>
+          <p class="door-sub">Go straight to the path you're after.</p>
+          <div class="door-list">
+            {door1.map((d) => (
+              <a class="door-item" href={d.href}>
+                <span>{d.label}</span><span class="arrow" aria-hidden="true">→</span>
+              </a>
+            ))}
+          </div>
+        </div>
+        <div class="door">
+          <h2>Help Me Figure It Out</h2>
+          <p class="door-sub">Answer a few questions and we'll point you to one clear next step.</p>
+          <div class="door-list">
+            {door2.map((d) => (
+              <a class="door-item" href={d.href}>
+                <span>{d.label}</span><span class="arrow" aria-hidden="true">→</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works: the graph -->
+  <section class="section wash">
+    <div class="container">
+      <div class="center" style="margin-bottom:1.6rem">
+        <p class="eyebrow">How Kawsah works</p>
+        <h2>Every tool leads to your next step</h2>
+        <p class="lede center">Kawsah isn't a brochure. It's a route graph: each guide, calculator, and template gives you an answer — and then tells you what to do with it.</p>
+      </div>
+      <div class="flow center" style="justify-content:center">
+        <span class="node">A question</span><span class="sep">→</span>
+        <span class="node">A tool</span><span class="sep">→</span>
+        <span class="node">An insight</span><span class="sep">→</span>
+        <span class="node">Your route</span><span class="sep">→</span>
+        <span class="node">The next step</span>
+      </div>
+      <div class="center" style="margin-top:1.8rem">
+        <Button href="/route-finder/" variant="primary" size="lg" gaEvent="route_started" gaAsset="how_it_works">
+          Find My Path
+        </Button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Calculators -->
+  <section class="section">
+    <div class="container">
+      <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:1rem;margin-bottom:1.6rem">
+        <div>
+          <p class="eyebrow">Start with the numbers</p>
+          <h2>Free planning calculators</h2>
+        </div>
+        <a class="btn btn-ghost" href="/route-finder/">Not sure which? Find my path →</a>
+      </div>
+      <div class="grid cols-4">
+        {calcs.map((r) => <RouteCard route={r} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- Ecosystem -->
+  <section class="section paper">
+    <div class="container">
+      <div class="center" style="margin-bottom:1.6rem">
+        <p class="eyebrow">The right graph for your situation</p>
+        <h2>Connected to a wider ecosystem</h2>
+        <p class="lede center">When your question is bigger than a single mortgage, Kawsah points you to the specialist tool that fits — and brings you back when you're ready.</p>
+      </div>
+      <div class="grid cols-4">
+        <EcosystemCard brandKey="northReserve" ctaLabel="Check readiness" />
+        <EcosystemCard brandKey="mitig8" ctaLabel="Analyze income" />
+        <EcosystemCard brandKey="nonqm" ctaLabel="Explore options" />
+        <EcosystemCard brandKey="corporateCapitalMap" ctaLabel="Business capital" />
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section paper">
+    <div class="container narrow">
+      <div class="center" style="margin-bottom:1.8rem">
+        <p class="eyebrow">Common questions</p>
+        <h2>The things buyers ask first</h2>
+      </div>
+      <div class="faq">
+        {FAQ_ITEMS.map((f) => (
+          <details class="faq-item">
+            <summary>{f.q}</summary>
+            <div class="faq-a">
+              <p>{f.a}</p>
+              {f.href && <a href={f.href}>{f.cta} →</a>}
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="section">
+    <div class="container">
+      <div class="cta-band cta-center">
+        <p class="eyebrow" style="color:var(--teal-400)">Get connected</p>
+        <h2>When you're ready, we're ready.</h2>
+        <p class="cta-sub">Start your application on your own time, or book a 15-minute call to talk through your options. No pressure, no obligation.</p>
+        <div class="btn-row" style="justify-content:center;margin-top:1.5rem">
+          <Button href="/apply/" variant="accent" size="lg" gaEvent="application_cta_clicked" gaCta="Start application">Start My Application</Button>
+          <Button href="/apply/" variant="outline" size="lg" gaEvent="booking_cta_clicked" gaCta="Book a call">Book a Call</Button>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .home-hero {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: clamp(1.5rem, 1rem + 3vw, 3.5rem);
+    align-items: center;
+  }
+  .hero-logo { display: flex; justify-content: center; }
+  .hero-logo img {
+    width: min(100%, 360px);
+    height: auto;
+    background: #FCFBF9;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    padding: clamp(1rem, 0.6rem + 1vw, 1.6rem);
+    box-shadow: var(--shadow-lg);
+  }
+  @media (max-width: 820px) {
+    .home-hero { grid-template-columns: 1fr; }
+    .hero-logo { order: -1; }
+    .hero-logo img { width: min(78%, 300px); }
+  }
+</style>

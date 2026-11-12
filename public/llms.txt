@@ -1,0 +1,56 @@
+# Kawsah
+> Your Path to Homeownership
+
+Kawsah is a mortgage intelligence and homeownership navigation platform. Understand your options, find your next step, and connect to the right financing path when you're ready.
+
+Kawsah is a mortgage intelligence + financing route graph. Every tool leads to a clear next step. Tools produce estimates only and are not loan offers, approvals, or eligibility determinations.
+
+## Start here
+- [Find My Path (route finder)](/route-finder/): answer a few questions, get one best next step
+- [Apply](/apply): start a mortgage application
+- [Book a call](https://calendly.com/kawsah/15min): 15-minute call
+
+## Pages & guides
+- [Buy a Home](/purchase/): I want to buy a home
+- [Refinance](/refinance/): I want to refinance
+- [First-Time Buyer](/first-time-buyer/): I'm a first-time buyer
+- [House Hunting Dashboard](/house-hunting/): I'm actively looking at houses
+- [Affordability Calculator](/affordability/): How much house can I afford?
+- [Mortgage Payment Calculator](/mortgage-payment/): What's my mortgage payment?
+- [Cash-to-Close Calculator](/cash-to-close/): How much money do I need to close?
+- [Refinance Break-Even Calculator](/refi-breakeven/): Does refinancing make sense?
+- [Purchase Playbook](/purchase-playbook/): I need to understand the homebuying process
+- [Financial Readiness](/financial-readiness/): I don't know if I'm financially ready
+- [Expense Tracker](/expense-tracker/): I need to get my spending under control
+- [Personal Finance Toolbox](/personal-finance-toolbox/): I need to improve my finances before buying
+- [Self-Employed](/self-employed/): I'm self-employed
+- [Self-Employed Income Analysis](/self-employed/): I need help calculating self-employed income
+- [Add-Backs](/self-employed/): My tax returns make my income look low
+- [Bank Statement Financing](/self-employed/): I need alternative documentation
+- [Alternative (Non-QM) Financing](/self-employed/): I need a non-QM mortgage
+- [House Management Hub](/house-management/): I just bought a house
+- [Home Inventory Dashboard](/home-inventory/): I need to document everything in my home
+- [Smart Home Dashboard](/smart-home/): I want to manage my smart home
+- [Meal Planning Dashboard](/meal-planning/): I need to plan meals
+- [Recipe Dashboard](/recipes/): I want one place for my recipes
+- [Life Wiki](/life-wiki/): I want to organize my life
+- [Community](/community/): I want help from other buyers
+- [Homebuyer Bundle](/homebuyer-bundle/): I want everything for buying and owning a home
+- [Realtor Toolkit](/realtors/): I'm a Realtor
+- [Lender Toolkit](/lenders/): I'm a lender
+- [Professional Bundle](/professional-bundle/): I want business-growth tools
+
+## Ecosystem (cross-graph routing)
+- [Mitig8 AI](https://www.mitig8.cloud): Self-employed income analysis (tax-return income, add-backs, qualifying-income scenarios).
+- [NonQM Capital](https://www.nonqmcapital.net): Alternative financing: bank statement, DSCR, bridge, foreign national, investment, 5–10 unit.
+- [Corporate Capital Map](https://corporatecapitalmap.com): Business and working capital to grow a company (not a mortgage on a property).
+- [NorthReserve](https://www.northreserve.org): Personal financial readiness — spending, reserves, and your broader financial position.
+- [Stop Losing Mortgages](https://stoplosingmortgages.com): For lenders who want professional Mitig8 software.
+
+## Machine-readable data
+- [Route matrix](/data/routes.json)
+- [Tool manifest](/kawsah-tools.json)
+
+## Contact
+Marcelo Bayon, Mortgage Loan Originator, NMLS #1851997
+Email: info@kawsah.com · Phone: (801) 996-4233

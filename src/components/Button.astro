@@ -1,0 +1,29 @@
+---
+/* Canonical CTA. Carries GA attributes so clicks are tracked centrally
+   (see src/lib/analytics.js delegated tracking). No inline handlers. */
+const {
+  href = "#",
+  variant = "primary",
+  size = "",
+  external = false,
+  class: klass = "",
+  id,
+  gaEvent, gaBrand, gaRoute, gaAsset, gaIntent, gaStage, gaCta, gaTool, gaProduct,
+} = Astro.props;
+
+const ga = {};
+if (gaEvent) ga["data-ga-event"] = gaEvent;
+if (gaBrand) ga["data-ga-brand"] = gaBrand;
+if (gaRoute) ga["data-ga-route"] = gaRoute;
+if (gaAsset) ga["data-ga-asset"] = gaAsset;
+if (gaIntent) ga["data-ga-intent"] = gaIntent;
+if (gaStage) ga["data-ga-stage"] = gaStage;
+if (gaCta) ga["data-ga-cta"] = gaCta;
+if (gaTool) ga["data-ga-tool"] = gaTool;
+if (gaProduct) ga["data-ga-product"] = gaProduct;
+
+const cls = ["btn", `btn-${variant}`, size, external ? "ext" : "", klass].filter(Boolean).join(" ");
+const target = external ? "_blank" : undefined;
+const rel = external ? "noopener" : undefined;
+---
+<a href={href} class={cls} id={id} target={target} rel={rel} {...ga}><slot /></a>

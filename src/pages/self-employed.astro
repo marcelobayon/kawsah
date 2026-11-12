@@ -1,0 +1,74 @@
+---
+import Page from "../layouts/Page.astro";
+import NextStep from "../components/NextStep.astro";
+import EcosystemCard from "../components/EcosystemCard.astro";
+import Disclaimer from "../components/Disclaimer.astro";
+import { getRoute } from "../data/routes.js";
+
+const route = getRoute("MITIG8_SELF_EMPLOYED");
+const paths = [
+  {
+    h: "You qualify with tax returns",
+    p: "Most self-employed borrowers can use tax-return income — but write-offs and add-backs change what a lender can actually count. A detailed income analysis is the right first move.",
+    who: "Mitig8",
+  },
+  {
+    h: "Tax returns don't tell the whole story",
+    p: "If your returns understate your real cash flow, alternative documentation — like bank-statement approaches — may fit better. That's the NonQM lane.",
+    who: "NonQM Capital",
+  },
+  {
+    h: "You're ready to talk options",
+    p: "Once your income picture is organized, Kawsah connects you to a mortgage conversation about structures that fit your goals.",
+    who: "Kawsah",
+  },
+];
+---
+<Page
+  title="Self-employed? Your income deserves a closer look."
+  seoTitle="Self-Employed Mortgages"
+  description="Self-employed income often needs a different way of understanding the numbers. See how documentation, add-backs, and alternative options map to the right path."
+  eyebrow="Self-Employed"
+  lede="When you work for yourself, the number on your tax return rarely equals the money you actually make. The path forward depends on how your income is documented — here's how to tell."
+  breadcrumbs={[{ label: "Home", href: "/" }, { label: "Self-Employed" }]}
+>
+  <section class="section tight" id="income-analysis">
+    <div class="container">
+      <h2>Three common paths</h2>
+      <p class="lede" style="margin-top:.5rem">Your documentation — not your job title — decides which one fits.</p>
+      <div class="grid cols-3" style="margin-top:1.4rem">
+        {paths.map((p) => (
+          <div class="card">
+            <span class="pill">{p.who}</span>
+            <h3 style="margin-top:.6rem">{p.h}</h3>
+            <p class="muted">{p.p}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section tight paper">
+    <div class="container">
+      <h2>How the routing works</h2>
+      <div class="flow" style="margin:1.1rem 0 1.6rem">
+        <span class="node">Self-employed</span><span class="sep">→</span>
+        <span class="node">How is income documented?</span><span class="sep">→</span>
+        <span class="node">Tax returns → Mitig8</span><span class="sep">→</span>
+        <span class="node">Alternative docs → NonQM</span><span class="sep">→</span>
+        <span class="node">Kawsah mortgage path</span>
+      </div>
+      <div class="grid cols-2">
+        <EcosystemCard brandKey="mitig8" ctaLabel="Analyze my income" blurb="Self-employed income analysis — Schedule C, add-backs, and qualifying-income scenarios — before a lender conversation." />
+        <EcosystemCard brandKey="nonqm" ctaLabel="Explore alternative docs" blurb="Bank-statement and other alternative-documentation pathways when tax returns understate your real cash flow." />
+      </div>
+    </div>
+  </section>
+
+  <section class="section tight">
+    <div class="container">
+      <NextStep route={route} />
+      <div style="margin-top:1.5rem"><Disclaimer variant="route" /></div>
+    </div>
+  </section>
+</Page>

@@ -1,0 +1,24 @@
+---
+import Page from "../layouts/Page.astro";
+import EcosystemLanding from "../components/EcosystemLanding.astro";
+---
+<Page
+  title="Personal finance toolbox"
+  seoTitle="Personal Finance Toolbox"
+  description="Prepare your broader finances before buying. Kawsah routes you to NorthReserve for reserves, debt, and financial preparation — without duplicating its tools."
+  eyebrow="Financial Prep"
+  lede="If there's a specific financial obstacle between you and a home — debt, thin reserves, unpredictable income — it's worth addressing directly before you shop."
+  breadcrumbs={[{ label: "Home", href: "/" }, { label: "Personal Finance Toolbox" }]}
+>
+  <EcosystemLanding
+    routeId="NORTHRESERVE_FINANCIAL_PREP"
+    intro="This is the preparation lane. Whatever your specific obstacle, the goal is to walk into a financing conversation from a stronger position."
+    features={[
+      { h: "Tackle debt", p: "Understand how existing payments affect your capacity — and your comfort." },
+      { h: "Build reserves", p: "Create the cushion that makes a mortgage feel safe rather than stretched." },
+      { h: "Steady the picture", p: "Bring order to irregular income and spending before you add a payment." },
+    ]}
+    flow={["Financial prep", "Reserves & debt", "Readiness", "Kawsah"]}
+    boundary="Use Kawsah to understand the home-buying decision. Use NorthReserve to understand and improve your broader financial position."
+  />
+</Page>

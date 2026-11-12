@@ -1,0 +1,24 @@
+---
+import Page from "../layouts/Page.astro";
+import EcosystemLanding from "../components/EcosystemLanding.astro";
+---
+<Page
+  title="Are you financially ready to buy?"
+  seoTitle="Financial Readiness"
+  description="Before deciding what mortgage you could qualify for, understand what homeownership means for your overall financial position. Kawsah routes you to NorthReserve for the deeper work."
+  eyebrow="Financial Readiness"
+  lede="Qualifying for a mortgage and being ready for one aren't the same thing. This is about the second one — your reserves, your spending, and how a payment would really feel."
+  breadcrumbs={[{ label: "Home", href: "/" }, { label: "Financial Readiness" }]}
+>
+  <EcosystemLanding
+    routeId="NORTHRESERVE_FINANCIAL_READINESS"
+    intro="Homeownership is a financial position, not just a monthly payment. Before you stretch to a number, it's worth seeing the whole picture — and that's exactly what NorthReserve is built for."
+    features={[
+      { h: "Reserves & cushion", p: "How many months of runway you'd have after closing — often what makes a payment feel safe or scary." },
+      { h: "Spending clarity", p: "Where your money actually goes today, before a mortgage joins the mix." },
+      { h: "Comfortable, not maximum", p: "The payment you can live with, not the largest one a formula allows." },
+    ]}
+    flow={["Financial readiness", "Comfortable affordability", "Home-buying readiness", "Kawsah"]}
+    boundary="Use Kawsah to understand the home-buying decision. Use NorthReserve to understand your broader financial position — we won't duplicate its tools here."
+  />
+</Page>

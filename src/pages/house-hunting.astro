@@ -1,0 +1,26 @@
+---
+import Page from "../layouts/Page.astro";
+import ToolLanding from "../components/ToolLanding.astro";
+---
+<Page
+  title="House Hunting Dashboard"
+  seoTitle="House Hunting Dashboard"
+  description="Organize the homes you're considering, compare them side by side, and keep your whole search in one place — then connect each home to what it really costs."
+  eyebrow="House Hunting"
+  lede="Stop juggling browser tabs and screenshots. Organize the homes you're considering, compare them on what actually matters, and keep your search in one calm place."
+  breadcrumbs={[{ label: "Home", href: "/" }, { label: "House Hunting" }]}
+>
+  <ToolLanding
+    routeId="KAWSAH_HOUSE_HUNTING"
+    productKey="houseHunting"
+    getLabel="Get the House Hunting Dashboard"
+    intro="A simple workspace for the shopping phase: every home you're weighing, in one view, with the notes and numbers that help you decide with your head as well as your heart."
+    features={[
+      { h: "Compare side by side", p: "Price, location, condition, commute — line homes up next to each other instead of holding it all in your head." },
+      { h: "Track tours & notes", p: "What you loved, what worried you, and the questions to ask before you offer." },
+      { h: "Tie homes to your budget", p: "Connect each listing to an affordability and cash-to-close estimate so you shop in your real range." },
+    ]}
+    flow={["House hunting", "Affordability", "Cash to close", "Mortgage path", "Apply"]}
+    connects={["KAWSAH_AFFORDABILITY", "KAWSAH_CASH_TO_CLOSE", "KAWSAH_MORTGAGE_PAYMENT"]}
+  />
+</Page>

@@ -1,0 +1,31 @@
+---
+import Page from "../layouts/Page.astro";
+import Button from "../components/Button.astro";
+---
+<Page
+  title="Kawsah Bundles"
+  seoTitle="Bundles"
+  description="Choose your Kawsah bundle: the Homebuyer Bundle for buyers and new homeowners, or the Professional Bundle for Realtors and lenders."
+  eyebrow="Bundles"
+  lede="Two bundles, two audiences. Pick the one that fits."
+  breadcrumbs={[{ label: "Home", href: "/" }, { label: "Bundles" }]}
+>
+  <section class="section tight">
+    <div class="container">
+      <div class="grid cols-2">
+        <div class="card">
+          <span class="pill">For buyers &amp; homeowners</span>
+          <h3 style="margin-top:.6rem">Homebuyer Bundle</h3>
+          <p class="muted">Every buyer and homeowner tool in one place — calculators, House Hunting, the Purchase Playbook, and the homeowner tools.</p>
+          <div class="card-cta"><Button href="/homebuyer-bundle/" variant="primary" gaEvent="bundle_viewed" gaProduct="homebuyerBundle">See the Homebuyer Bundle</Button></div>
+        </div>
+        <div class="card">
+          <span class="pill">For Realtors &amp; lenders</span>
+          <h3 style="margin-top:.6rem">Professional Bundle</h3>
+          <p class="muted">The Realtor and Lender toolkits together — productivity, marketing, client tools, and self-employed borrower support.</p>
+          <div class="card-cta"><Button href="/professional-bundle/" variant="primary" gaEvent="bundle_viewed" gaProduct="professionalBundle">See the Professional Bundle</Button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Page>

@@ -1,0 +1,25 @@
+---
+import Page from "../layouts/Page.astro";
+import ToolLanding from "../components/ToolLanding.astro";
+---
+<Page
+  title="Smart Home Dashboard"
+  seoTitle="Smart Home Dashboard"
+  description="Plan and organize your smart-home devices, routines, and warranties in one place. An organizer that works alongside any brand — not a control hub."
+  eyebrow="Homeowner Tools"
+  lede="Smart homes get messy fast — apps, accounts, and gadgets everywhere. This is a calm place to plan and keep track of all of it."
+  breadcrumbs={[{ label: "Home", href: "/" }, { label: "Homeowner Tools", href: "/homeowner-tools/" }, { label: "Smart Home" }]}
+>
+  <ToolLanding
+    routeId="KAWSAH_SMART_HOME"
+    getLabel="Organize your smart home"
+    intro="A planning and organization dashboard for your connected home — devices, routines, and warranties in one view."
+    features={[
+      { h: "Device directory", p: "Every device, which room it's in, the account and app it uses, and its warranty." },
+      { h: "Plan your routines", p: "Sketch the automations you want before wrestling with settings." },
+      { h: "Works with any brand", p: "It's an organizer, not a control hub — so it sits alongside whatever ecosystems you use, with no compatibility promises." },
+    ]}
+    flow={["Inventory devices", "Plan routines", "Maintain"]}
+    connects={["KAWSAH_HOME_MANAGEMENT"]}
+  />
+</Page>

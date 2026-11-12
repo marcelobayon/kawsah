@@ -1,0 +1,142 @@
+---
+import Page from "../layouts/Page.astro";
+import NextStep from "../components/NextStep.astro";
+import Disclaimer from "../components/Disclaimer.astro";
+import { getRoute, resolveNext } from "../data/routes.js";
+import { CONFIG } from "../config/config.js";
+
+const route = getRoute("KAWSAH_MORTGAGE_PAYMENT");
+const next = resolveNext(route);
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "Kawsah Mortgage Payment Calculator",
+  applicationCategory: "FinanceApplication",
+  operatingSystem: "Web",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+  url: `${CONFIG.brand.domain}/mortgage-payment/`,
+};
+---
+<Page
+  title="What would your mortgage payment be?"
+  seoTitle="Mortgage Payment Calculator"
+  description="Estimate a full monthly mortgage payment — principal, interest, taxes, insurance, HOA, and PMI — from a home price and down payment. Planning estimate only."
+  eyebrow="Calculator"
+  lede="See a realistic monthly payment — not just principal and interest, but the taxes and insurance that come with it."
+  breadcrumbs={[{ label: "Home", href: "/" }, { label: "Tools", href: "/route-finder/" }, { label: "Mortgage Payment" }]}
+  jsonLd={jsonLd}
+>
+  <section class="section tight">
+    <div class="container">
+      <div class="calc">
+        <form class="calc-inputs" id="calc-form">
+          <div class="field">
+            <label for="price">Home price ($)</label>
+            <input id="price" name="price" type="number" inputmode="numeric" min="0" step="1000" value="450000" />
+          </div>
+          <div class="form-grid">
+            <div class="field">
+              <label for="downPct">Down payment (%)</label>
+              <input id="downPct" name="downPct" type="number" inputmode="decimal" min="0" max="100" step="0.5" value="10" />
+            </div>
+            <div class="field">
+              <label for="annualRatePct">Interest rate (%)</label>
+              <input id="annualRatePct" name="annualRatePct" type="number" inputmode="decimal" min="0" step="0.125" value="6.5" />
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="field">
+              <label for="termYears">Loan term</label>
+              <select id="termYears" name="termYears">
+                <option value="30" selected>30 years</option>
+                <option value="20">20 years</option>
+                <option value="15">15 years</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="taxPct">Property tax (%/yr)</label>
+              <input id="taxPct" name="taxPct" type="number" inputmode="decimal" min="0" step="0.05" value="1.1" />
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="field">
+              <label for="insYr">Home insurance ($/yr)</label>
+              <input id="insYr" name="insYr" type="number" inputmode="numeric" min="0" step="50" value="1200" />
+            </div>
+            <div class="field">
+              <label for="hoa">HOA ($/mo)</label>
+              <input id="hoa" name="hoa" type="number" inputmode="numeric" min="0" step="10" value="0" />
+            </div>
+          </div>
+          <div class="field">
+            <label for="pmi">PMI / MI ($/mo)</label>
+            <input id="pmi" name="pmi" type="number" inputmode="numeric" min="0" step="10" value="0" />
+            <span class="hint">Often applies with less than 20% down. Leave 0 if unsure.</span>
+          </div>
+        </form>
+
+        <div class="calc-output" role="status" aria-live="polite">
+          <p class="result-label">Estimated monthly payment</p>
+          <div class="result-figure" id="out-total">—</div>
+          <ul class="result-rows">
+            <li><span>Principal &amp; interest</span><span id="out-pi">—</span></li>
+            <li><span>Property tax</span><span id="out-tax">—</span></li>
+            <li><span>Home insurance</span><span id="out-ins">—</span></li>
+            <li><span>HOA</span><span id="out-hoa">—</span></li>
+            <li><span>PMI / MI</span><span id="out-pmi">—</span></li>
+            <li><span>Loan amount</span><span id="out-loan">—</span></li>
+          </ul>
+          <div class="card-cta">
+            <a class="btn btn-primary" href={next.href} data-ga-event="calculator_cta_clicked" data-ga-route={route.id} data-ga-cta={route.primaryCTA} data-ga-tool={route.title}>{next.label} →</a>
+          </div>
+          <div style="margin-top:1rem"><Disclaimer variant="calc" /></div>
+        </div>
+      </div>
+
+      <div style="margin-top:1.6rem"><NextStep route={route} /></div>
+    </div>
+  </section>
+</Page>
+
+<script>
+  import { calculateMortgagePayment } from "../lib/calc-network.js";
+  import { readNum, fmtMoney, setText, debounce } from "../lib/calc-ui.js";
+  import { track } from "../lib/analytics.js";
+
+  const TOOL = "Mortgage Payment Calculator";
+  const form = document.getElementById("calc-form");
+  if (form) {
+    let started = false;
+    const done = debounce(() => track("calculator_completed", { tool_name: TOOL }), 900);
+
+    function run() {
+      const price = readNum(form, "price");
+      const downPct = readNum(form, "downPct");
+      const loanAmount = Math.max(0, price * (1 - downPct / 100));
+      const r = calculateMortgagePayment({
+        loanAmount,
+        annualRatePct: readNum(form, "annualRatePct", 6.5),
+        termYears: readNum(form, "termYears", 30),
+        propertyTaxAnnual: price * (readNum(form, "taxPct") / 100),
+        homeInsuranceAnnual: readNum(form, "insYr"),
+        hoaMonthly: readNum(form, "hoa"),
+        pmiMonthly: readNum(form, "pmi"),
+      });
+      setText("out-total", fmtMoney(r.totalMonthly, 0));
+      setText("out-pi", fmtMoney(r.principalAndInterest, 0));
+      setText("out-tax", fmtMoney(r.monthlyTax, 0));
+      setText("out-ins", fmtMoney(r.monthlyInsurance, 0));
+      setText("out-hoa", fmtMoney(r.hoaMonthly, 0));
+      setText("out-pmi", fmtMoney(r.pmiMonthly, 0));
+      setText("out-loan", fmtMoney(r.loanAmount, 0));
+    }
+
+    form.addEventListener("input", () => {
+      if (!started) { started = true; track("calculator_started", { tool_name: TOOL }); }
+      run();
+      done();
+    });
+    track("calculator_viewed", { tool_name: TOOL });
+    run();
+  }
+</script>

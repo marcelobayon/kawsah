@@ -1,0 +1,70 @@
+---
+import Page from "../layouts/Page.astro";
+import RouteCard from "../components/RouteCard.astro";
+import NextStep from "../components/NextStep.astro";
+import EcosystemCard from "../components/EcosystemCard.astro";
+import Disclaimer from "../components/Disclaimer.astro";
+import Button from "../components/Button.astro";
+import { getRoute } from "../data/routes.js";
+import { routes as pickRoutes, FIRST_TIME_JOURNEY } from "../data/assets.js";
+
+const route = getRoute("KAWSAH_FIRST_TIME_BUYER");
+const journey = pickRoutes(FIRST_TIME_JOURNEY);
+const know = [
+  "Your comfortable budget matters more than the maximum you could borrow.",
+  "You'll need cash for a down payment and closing costs — they're separate.",
+  "Getting your finances organized early makes every later step easier.",
+  "You don't have to understand every loan program — just your next step.",
+];
+---
+<Page
+  title="First-time buyer? Start here."
+  seoTitle="First-Time Home Buyer"
+  description="A calm first-time buyer roadmap: understand your budget, plan for cash to close, get financially ready, and know your next step — without the jargon."
+  eyebrow="First-Time Buyer"
+  lede="Buying your first home feels like a lot because nobody hands you the map. Here's the map — in order, one step at a time."
+  breadcrumbs={[{ label: "Home", href: "/" }, { label: "First-Time Buyer" }]}
+>
+  <section class="section tight">
+    <div class="container">
+      <h2>Before you tour a single home</h2>
+      <ul class="steps" style="margin-top:1.3rem">
+        {know.map((k) => (
+          <li><div><p style="color:var(--ink);font-size:var(--step-0)">{k}</p></div></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section tight paper">
+    <div class="container">
+      <h2>Your first-time buyer journey</h2>
+      <p class="lede" style="margin-top:.5rem">Work through these in order, or jump to whatever's on your mind.</p>
+      <div class="grid cols-3" style="margin-top:1.4rem">
+        {journey.map((r) => <RouteCard route={r} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section tight">
+    <div class="container">
+      <div class="grid cols-2" style="align-items:center">
+        <div>
+          <h2>Get financially ready first</h2>
+          <p class="lede" style="margin-top:.5rem">Before deciding what mortgage you could qualify for, understand what homeownership means for your broader finances. That's what NorthReserve is for — we won't duplicate it here.</p>
+          <div class="btn-row" style="margin-top:1.2rem">
+            <Button href="/financial-readiness/" variant="primary" gaCta="Financial readiness">Check my readiness</Button>
+          </div>
+        </div>
+        <EcosystemCard brandKey="northReserve" ctaLabel="Check My Financial Mountain" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section tight paper">
+    <div class="container">
+      <NextStep route={route} />
+      <div style="margin-top:1.5rem"><Disclaimer variant="general" /></div>
+    </div>
+  </section>
+</Page>

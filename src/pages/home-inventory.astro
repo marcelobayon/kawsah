@@ -1,0 +1,25 @@
+---
+import Page from "../layouts/Page.astro";
+import ToolLanding from "../components/ToolLanding.astro";
+---
+<Page
+  title="Home Inventory Dashboard"
+  seoTitle="Home Inventory Dashboard"
+  description="Document what's in your home — make, model, brand, and key details — with organized records for repairs, replacements, and insurance documentation."
+  eyebrow="Homeowner Tools"
+  lede="If you ever had to list everything you own, could you? The Home Inventory Dashboard makes it something you actually finish."
+  breadcrumbs={[{ label: "Home", href: "/" }, { label: "Homeowner Tools", href: "/homeowner-tools/" }, { label: "Home Inventory" }]}
+>
+  <ToolLanding
+    routeId="KAWSAH_HOME_INVENTORY"
+    getLabel="Start your inventory"
+    intro="A structured place to catalog your belongings — the details you'd never remember under stress, ready before you need them."
+    features={[
+      { h: "Item details", p: "Make, model, brand, serial numbers, purchase dates, and values in a consistent format." },
+      { h: "Repair & replacement", p: "Keep manuals, warranties, and service notes attached to each item." },
+      { h: "Insurance documentation", p: "Organize photos and receipts in one place so you're ready to file — organizing records doesn't guarantee any claim outcome." },
+    ]}
+    flow={["Document", "Organize", "Ready if needed"]}
+    connects={["KAWSAH_HOME_MANAGEMENT"]}
+  />
+</Page>

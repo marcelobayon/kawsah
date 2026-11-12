@@ -1,0 +1,123 @@
+---
+import Page from "../layouts/Page.astro";
+import NextStep from "../components/NextStep.astro";
+import Disclaimer from "../components/Disclaimer.astro";
+import { getRoute, resolveNext } from "../data/routes.js";
+import { CONFIG } from "../config/config.js";
+
+const route = getRoute("KAWSAH_CASH_TO_CLOSE");
+const next = resolveNext(route);
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "Kawsah Cash-to-Close Calculator",
+  applicationCategory: "FinanceApplication",
+  operatingSystem: "Web",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+  url: `${CONFIG.brand.domain}/cash-to-close/`,
+};
+---
+<Page
+  title="How much cash will you need to close?"
+  seoTitle="Cash-to-Close Calculator"
+  description="Estimate the cash you'll need at closing: down payment plus closing costs and prepaids, less seller credits and earnest money. Planning estimate only."
+  eyebrow="Calculator"
+  lede="Your down payment is only part of it. Here's a fuller picture of the cash you'll want ready by closing day."
+  breadcrumbs={[{ label: "Home", href: "/" }, { label: "Tools", href: "/route-finder/" }, { label: "Cash to Close" }]}
+  jsonLd={jsonLd}
+>
+  <section class="section tight">
+    <div class="container">
+      <div class="calc">
+        <form class="calc-inputs" id="calc-form">
+          <div class="field">
+            <label for="purchasePrice">Purchase price ($)</label>
+            <input id="purchasePrice" name="purchasePrice" type="number" inputmode="numeric" min="0" step="1000" value="400000" />
+          </div>
+          <div class="form-grid">
+            <div class="field">
+              <label for="downPaymentPct">Down payment (%)</label>
+              <input id="downPaymentPct" name="downPaymentPct" type="number" inputmode="decimal" min="0" max="100" step="0.5" value="5" />
+            </div>
+            <div class="field">
+              <label for="closingCostPct">Closing costs (%)</label>
+              <input id="closingCostPct" name="closingCostPct" type="number" inputmode="decimal" min="0" step="0.25" value="3" />
+              <span class="hint">Typically ~2–5% of price.</span>
+            </div>
+          </div>
+          <div class="field">
+            <label for="prepaidsEstimate">Prepaids / escrow setup ($)</label>
+            <input id="prepaidsEstimate" name="prepaidsEstimate" type="number" inputmode="numeric" min="0" step="100" value="2500" />
+            <span class="hint">Upfront taxes & insurance placed in escrow. Varies by timing.</span>
+          </div>
+          <div class="form-grid">
+            <div class="field">
+              <label for="sellerCredits">Seller credits ($)</label>
+              <input id="sellerCredits" name="sellerCredits" type="number" inputmode="numeric" min="0" step="500" value="0" />
+            </div>
+            <div class="field">
+              <label for="earnestMoneyPaid">Earnest money already paid ($)</label>
+              <input id="earnestMoneyPaid" name="earnestMoneyPaid" type="number" inputmode="numeric" min="0" step="500" value="0" />
+            </div>
+          </div>
+        </form>
+
+        <div class="calc-output" role="status" aria-live="polite">
+          <p class="result-label">Estimated cash to close</p>
+          <div class="result-figure" id="out-total">—</div>
+          <ul class="result-rows">
+            <li><span>Down payment</span><span id="out-down">—</span></li>
+            <li><span>Closing costs</span><span id="out-closing">—</span></li>
+            <li><span>Prepaids / escrow</span><span id="out-prepaids">—</span></li>
+            <li><span>Less seller credits</span><span id="out-credits">—</span></li>
+            <li><span>Less earnest money</span><span id="out-earnest">—</span></li>
+          </ul>
+          <div class="card-cta">
+            <a class="btn btn-primary" href={next.href} data-ga-event="calculator_cta_clicked" data-ga-route={route.id} data-ga-cta={route.primaryCTA} data-ga-tool={route.title}>{next.label} →</a>
+          </div>
+          <div style="margin-top:1rem"><Disclaimer variant="calc" /></div>
+        </div>
+      </div>
+
+      <div style="margin-top:1.6rem"><NextStep route={route} /></div>
+    </div>
+  </section>
+</Page>
+
+<script>
+  import { calculateCashToClose } from "../lib/calc-network.js";
+  import { readNum, fmtMoney, setText, debounce } from "../lib/calc-ui.js";
+  import { track } from "../lib/analytics.js";
+
+  const TOOL = "Cash-to-Close Calculator";
+  const form = document.getElementById("calc-form");
+  if (form) {
+    let started = false;
+    const done = debounce(() => track("calculator_completed", { tool_name: TOOL }), 900);
+
+    function run() {
+      const r = calculateCashToClose({
+        purchasePrice: readNum(form, "purchasePrice"),
+        downPaymentPct: readNum(form, "downPaymentPct"),
+        closingCostPct: readNum(form, "closingCostPct", 3),
+        prepaidsEstimate: readNum(form, "prepaidsEstimate"),
+        sellerCredits: readNum(form, "sellerCredits"),
+        earnestMoneyPaid: readNum(form, "earnestMoneyPaid"),
+      });
+      setText("out-total", fmtMoney(r.totalCashToClose));
+      setText("out-down", fmtMoney(r.downPayment));
+      setText("out-closing", fmtMoney(r.closingCosts));
+      setText("out-prepaids", fmtMoney(r.prepaids));
+      setText("out-credits", r.sellerCredits ? "− " + fmtMoney(r.sellerCredits) : fmtMoney(0));
+      setText("out-earnest", r.earnestMoney ? "− " + fmtMoney(r.earnestMoney) : fmtMoney(0));
+    }
+
+    form.addEventListener("input", () => {
+      if (!started) { started = true; track("calculator_started", { tool_name: TOOL }); }
+      run();
+      done();
+    });
+    track("calculator_viewed", { tool_name: TOOL });
+    run();
+  }
+</script>

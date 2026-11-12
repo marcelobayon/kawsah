@@ -1,0 +1,98 @@
+---
+import Page from "../layouts/Page.astro";
+import Button from "../components/Button.astro";
+import { CONFIG } from "../config/config.js";
+
+const site = CONFIG.brand.domain;
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: CONFIG.license.originator,
+  jobTitle: "Mortgage Loan Originator",
+  url: `${site}/who-marcelo-is/`,
+  worksFor: { "@type": "Organization", name: CONFIG.brand.name, url: site },
+  identifier: { "@type": "PropertyValue", propertyID: "NMLS", value: CONFIG.license.nmls },
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: CONFIG.contact.address.city,
+    addressRegion: CONFIG.contact.address.region,
+    addressCountry: CONFIG.contact.address.country,
+  },
+};
+
+const stats = [
+  { n: "10+ yrs", l: "Client success experience" },
+  { n: "5+ yrs", l: "Real estate experience" },
+  { n: "$15M+", l: "Residential loans closed" },
+  { n: "Utah", l: "Mortgage market focus" },
+];
+---
+<Page
+  title="Who Marcelo is"
+  seoTitle="About Marcelo Bayon — Mortgage Loan Originator"
+  description="Marcelo Bayon is a Utah mortgage loan originator who builds tools from real mortgage workflow, with a focus on self-employed borrowers and creative financing."
+  eyebrow="About"
+  lede="A mortgage loan originator who got tired of watching people feel lost — and built Kawsah so the next step is always clear."
+  breadcrumbs={[{ label: "Home", href: "/" }, { label: "About" }]}
+  jsonLd={jsonLd}
+>
+  <section class="section tight">
+    <div class="container">
+      <div class="grid cols-4">
+        {stats.map((s) => (
+          <div class="card center">
+            <div class="result-figure" style="font-size:var(--step-3)">{s.n}</div>
+            <p class="result-label" style="margin-top:.4rem">{s.l}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section tight paper">
+    <div class="container">
+      <p class="eyebrow">What Kawsah stands for</p>
+      <div class="grid cols-3" style="margin-top:1.2rem">
+        <div class="card"><h3>Mission</h3><p class="muted">Help home buyers and real‑estate professionals make better decisions — a white‑glove, jargon‑free path from "I don't know what to do" to "I know my next move."</p></div>
+        <div class="card"><h3>Vision</h3><p class="muted">An ecosystem of connected tools — Kawsah alongside NorthReserve, Mitig8, NonQM Capital, and Corporate Capital Map — that guides every buyer and pro to the right next step.</p></div>
+        <div class="card"><h3>Values</h3><p class="muted">Clarity over jargon. Integrity in every recommendation. Tenacity for hard situations. Perpetual improvement. Service that feels white‑glove.</p></div>
+      </div>
+      <p class="muted" style="margin-top:1.3rem;max-width:72ch">Kawsah has been helping buyers since 2018. What began as a real‑estate resource is now a mortgage‑intelligence route graph — the consumer‑facing hub of a wider ecosystem that points you to the specialist tool that fits, and brings you back when you're ready.</p>
+    </div>
+  </section>
+
+  <section class="section tight">
+    <div class="container">
+      <div class="prose">
+        <p>
+          I'm {CONFIG.license.originator}, a mortgage loan originator (NMLS #{CONFIG.license.nmls})
+          based in {CONFIG.contact.address.city}. Over 10+ years working directly with clients and
+          5+ years in real estate, I've closed more than $15M in residential loans — and I've watched
+          the same thing happen again and again: capable people freeze up, not because they can't buy
+          a home, but because nobody showed them the next step.
+        </p>
+        <p>
+          Kawsah is my answer to that. It's built from real mortgage workflow, not marketing theory.
+          I specialize in <strong>self‑employed borrowers</strong> — where the numbers on a tax return
+          rarely tell the whole story — and in <strong>creative financing</strong> for situations that
+          don't fit a single box. The calculators, guides, and route finder here are the same tools I
+          wish every borrower had before their first conversation with a lender.
+        </p>
+        <h2>The two doors</h2>
+        <p>Everyone who lands here is walking through one of two doors:</p>
+        <ul>
+          <li><strong>Door 1 — "I know what I want."</strong> You're ready to buy, refinance, invest, or fund a business. Kawsah takes you straight to that path.</li>
+          <li><strong>Door 2 — "Help me figure it out."</strong> You're not sure yet. Answer a few questions and Kawsah points you to one clear next step — no pressure, no jargon.</li>
+        </ul>
+        <p>
+          Either way, the goal is the same: move you from <em>"I don't know what to do"</em> to
+          <em>"I understand my next move."</em>
+        </p>
+      </div>
+      <div class="btn-row" style="margin-top:1.8rem">
+        <Button href="/route-finder/" variant="primary" size="lg" gaEvent="route_started" gaAsset="about">Find My Path</Button>
+        <Button href="/apply/" variant="outline" size="lg" gaCta="Apply">I'm Ready to Apply</Button>
+      </div>
+    </div>
+  </section>
+</Page>

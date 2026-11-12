@@ -1,0 +1,70 @@
+---
+import Page from "../layouts/Page.astro";
+import LeadForm from "../components/LeadForm.astro";
+import Button from "../components/Button.astro";
+import NextStep from "../components/NextStep.astro";
+import Disclaimer from "../components/Disclaimer.astro";
+import { getRoute } from "../data/routes.js";
+import { resolveLink } from "../lib/destinations.js";
+
+const route = getRoute("KAWSAH_COMMUNITY");
+const link = resolveLink("community");
+const features = [
+  { h: "Ask real questions", p: "Bring your buying questions to people who've walked the same path." },
+  { h: "Learn from other buyers", p: "See how others navigated inspections, offers, and closing day." },
+  { h: "Shared resources", p: "Guides and checklists the community finds genuinely useful." },
+];
+---
+<Page
+  title="The Kawsah Community"
+  seoTitle="Community"
+  description="A place for home buyers to ask questions, learn from each other, and share what worked. Peer support and shared experience — not professional advice."
+  eyebrow="Community"
+  lede="Buying a home is less lonely with people who get it. Join other buyers to ask questions, compare notes, and learn from real experiences."
+  breadcrumbs={[{ label: "Home", href: "/" }, { label: "Community" }]}
+>
+  <section class="section tight">
+    <div class="container">
+      <div class="grid cols-3">
+        {features.map((f) => <div class="card"><h3>{f.h}</h3><p class="muted">{f.p}</p></div>)}
+      </div>
+      <p class="muted" style="margin-top:1.5rem;max-width:70ch">
+        Kawsah's community is <strong>peer support and shared experience</strong> — it isn't professional
+        advice, and answers come from members rather than staffed experts. For your specific situation,
+        <a href="/apply/">talk with Marcelo</a>.
+      </p>
+    </div>
+  </section>
+
+  <section class="section tight paper">
+    <div class="container narrow">
+      {link ? (
+        <div class="card center">
+          <h2>Join the conversation</h2>
+          <p class="lede center">Hop into the community and introduce yourself.</p>
+          <div class="btn-row" style="justify-content:center;margin-top:1rem">
+            <Button href={link.url} variant="primary" size="lg" external={true} gaEvent="community_join_clicked" gaCta="Join the Community">Join the Community</Button>
+          </div>
+        </div>
+      ) : (
+        <div class="card">
+          <LeadForm
+            name="community"
+            heading="Get your invite"
+            subtext="The community is opening soon — leave your email and we'll send your invite the moment it's live."
+            cta="Save my spot"
+            source="community"
+            message={false}
+          />
+        </div>
+      )}
+    </div>
+  </section>
+
+  <section class="section tight">
+    <div class="container">
+      <NextStep route={route} />
+      <div style="margin-top:1.4rem"><Disclaimer variant="general" /></div>
+    </div>
+  </section>
+</Page>

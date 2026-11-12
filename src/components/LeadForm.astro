@@ -1,0 +1,89 @@
+---
+import { getFormMeta } from "../lib/forms.js";
+const { name = "lead", heading, subtext, cta = "Send", source, message = true, tool, application = false } = Astro.props;
+const meta = getFormMeta();
+const netlifyAttrs = meta.isNetlify ? { "data-netlify": "true", "netlify-honeypot": "bot-field" } : {};
+---
+<div class="lead-form">
+  {heading && <h3>{heading}</h3>}
+  {subtext && <p class="muted" style="margin-top:.3rem">{subtext}</p>}
+  <form
+    data-kawsah-form
+    name={name}
+    method="post"
+    data-provider={meta.provider}
+    data-endpoint={meta.endpoint}
+    data-form-name={name}
+    data-tool={tool}
+    style="margin-top:1rem"
+    {...netlifyAttrs}
+  >
+    {meta.isNetlify && <input type="hidden" name="form-name" value={name} />}
+    <input type="hidden" name="source" value={source || name} />
+    <p class="hp" aria-hidden="true">
+      <label>Leave this field empty <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+    </p>
+    <div class="form-grid">
+      <div class="field">
+        <label for={`${name}-name`}>Name</label>
+        <input id={`${name}-name`} name="name" type="text" autocomplete="name" required />
+      </div>
+      <div class="field">
+        <label for={`${name}-email`}>Email</label>
+        <input id={`${name}-email`} name="email" type="email" autocomplete="email" required />
+      </div>
+    </div>
+    {application && (
+      <>
+        <div class="form-grid">
+          <div class="field">
+            <label for={`${name}-phone`}>Phone</label>
+            <input id={`${name}-phone`} name="phone" type="tel" autocomplete="tel" />
+          </div>
+          <div class="field">
+            <label for={`${name}-price`}>Target price or loan amount</label>
+            <input id={`${name}-price`} name="price_range" type="text" inputmode="numeric" placeholder="$" />
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label for={`${name}-purpose`}>What do you need?</label>
+            <select id={`${name}-purpose`} name="loan_purpose">
+              <option value="">Select…</option>
+              <option>Buy a home</option>
+              <option>Refinance</option>
+              <option>Cash-out refinance</option>
+              <option>Not sure yet</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for={`${name}-timeline`}>Timeline</label>
+            <select id={`${name}-timeline`} name="timeline">
+              <option value="">Select…</option>
+              <option>As soon as possible</option>
+              <option>1–3 months</option>
+              <option>3–6 months</option>
+              <option>Just exploring</option>
+            </select>
+          </div>
+        </div>
+      </>
+    )}
+    {message && (
+      <div class="field">
+        <label for={`${name}-message`}>{application ? "Anything else we should know?" : "How can we help?"}</label>
+        <textarea id={`${name}-message`} name="message" rows="4"></textarea>
+      </div>
+    )}
+    <button class="btn btn-primary" type="submit" data-ga-event="form_submitted" data-ga-form={name}>{cta}</button>
+    {!meta.endpointReady && (
+      <p class="form-error">Provider "{meta.provider}" isn't configured yet — set its endpoint in src/config/config.js.</p>
+    )}
+  </form>
+  <div class="form-success" data-form-success hidden>
+    <strong>Thank you.</strong> Your message is on its way.
+    {meta.fallbackEmail && (
+      <> You can also reach us at <a href={`mailto:${meta.fallbackEmail}`}>{meta.fallbackEmail}</a>.</>
+    )}
+  </div>
+</div>

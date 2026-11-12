@@ -1,0 +1,38 @@
+---
+import Page from "../layouts/Page.astro";
+import RouteCard from "../components/RouteCard.astro";
+import Button from "../components/Button.astro";
+import { routes as pickRoutes } from "../data/assets.js";
+
+const pros = pickRoutes(["KAWSAH_REALTOR_PRO", "KAWSAH_LENDER_PRO"]);
+---
+<Page
+  title="For Realtors & Lenders"
+  seoTitle="For Professionals"
+  description="A growing set of professional resources for Realtors and lenders — productivity, marketing, client tools, and self-employed borrower support. Built from real mortgage workflow."
+  eyebrow="Professionals"
+  lede="Kawsah is building a professional toolkit for the people who guide buyers — Realtors and lenders. Here's what's taking shape."
+  breadcrumbs={[{ label: "Home", href: "/" }, { label: "Professionals" }]}
+>
+  <section class="section tight">
+    <div class="container">
+      <div class="grid cols-2">
+        {pros.map((r) => <RouteCard route={r} showQuestion={true} />)}
+      </div>
+      <p class="muted" style="margin-top:1.5rem;max-width:70ch">
+        These professional resources sit alongside the consumer experience — they don't replace it.
+        If you're buying a home, start with <a href="/route-finder/">Find My Path</a> instead.
+      </p>
+    </div>
+  </section>
+
+  <section class="section tight paper">
+    <div class="container center">
+      <h2>Want the whole professional toolkit?</h2>
+      <p class="lede center">One bundle for the tools that help you grow your business.</p>
+      <div class="btn-row" style="justify-content:center;margin-top:1.2rem">
+        <Button href="/professional-bundle/" variant="primary" gaEvent="bundle_viewed" gaProduct="professionalBundle">See the Professional Bundle</Button>
+      </div>
+    </div>
+  </section>
+</Page>

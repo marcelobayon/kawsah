@@ -1,0 +1,65 @@
+---
+import Page from "../layouts/Page.astro";
+import LeadForm from "../components/LeadForm.astro";
+import Button from "../components/Button.astro";
+import Disclaimer from "../components/Disclaimer.astro";
+import { CONFIG, isSet } from "../config/config.js";
+
+const c = CONFIG.contact;
+const site = CONFIG.brand.domain;
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  name: `Contact ${CONFIG.brand.name}`,
+  url: `${site}/contact/`,
+  mainEntity: {
+    "@type": "Organization",
+    name: CONFIG.brand.name,
+    email: c.email,
+    telephone: c.phoneDisplay,
+  },
+};
+---
+<Page
+  title="Contact Kawsah"
+  seoTitle="Contact"
+  description="Get in touch with Kawsah. Send a message, email, call, or book a 15-minute conversation about your home financing questions."
+  eyebrow="Contact"
+  lede="Have a question, or want a human to point you in the right direction? Reach out — we read everything."
+  breadcrumbs={[{ label: "Home", href: "/" }, { label: "Contact" }]}
+  jsonLd={jsonLd}
+>
+  <section class="section tight">
+    <div class="container">
+      <div class="grid cols-2" style="align-items:start">
+        <div class="card">
+          <LeadForm
+            name="contact"
+            heading="Send a message"
+            subtext="Tell us where you are in the process — we'll reply with a clear next step."
+            cta="Send message"
+            source="contact_page"
+          />
+        </div>
+        <div>
+          <h2>Other ways to reach us</h2>
+          <ul class="result-rows" style="margin-top:.8rem">
+            {isSet(c.email) && <li><span>Email</span><span><a href={`mailto:${c.email}`}>{c.email}</a></span></li>}
+            {isSet(c.phoneDisplay) && <li><span>Phone</span><span><a href={c.phoneHref}>{c.phoneDisplay}</a></span></li>}
+            {isSet(c.address.city) && <li><span>Location</span><span>{c.address.city}, {c.address.region}</span></li>}
+          </ul>
+          <div class="btn-row" style="margin-top:1.3rem">
+            {isSet(c.bookingUrl) && (
+              <Button href={c.bookingUrl} variant="primary" external={true} gaEvent="booking_cta_clicked" gaCta="Book a call">Book a 15-min call</Button>
+            )}
+            {isSet(c.applicationUrl) && (
+              <Button href={c.applicationUrl} variant="outline" gaEvent="application_cta_clicked" gaCta="Start application">Start an application</Button>
+            )}
+          </div>
+          <p class="muted" style="margin-top:1.4rem;font-size:var(--step--1)">{CONFIG.license.originator} · Mortgage Loan Originator · NMLS #{CONFIG.license.nmls}</p>
+        </div>
+      </div>
+      <div style="margin-top:1.6rem"><Disclaimer variant="general" /></div>
+    </div>
+  </section>
+</Page>

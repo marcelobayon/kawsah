@@ -1,0 +1,68 @@
+---
+import Page from "../layouts/Page.astro";
+import RouteCard from "../components/RouteCard.astro";
+import NextStep from "../components/NextStep.astro";
+import Disclaimer from "../components/Disclaimer.astro";
+import Button from "../components/Button.astro";
+import { getRoute } from "../data/routes.js";
+import { routes as pickRoutes } from "../data/assets.js";
+
+const route = getRoute("KAWSAH_PURCHASE");
+const tools = pickRoutes([
+  "KAWSAH_AFFORDABILITY",
+  "KAWSAH_CASH_TO_CLOSE",
+  "KAWSAH_HOUSE_HUNTING",
+  "NORTHRESERVE_FINANCIAL_READINESS",
+]);
+
+const stages = [
+  { h: "Understand", p: "Learn how buying actually works and what each step costs — before you fall in love with a listing." , href: "/purchase-playbook/", cta: "Purchase Playbook" },
+  { h: "Prepare", p: "Get an honest read on your financial position and comfortable budget.", href: "/financial-readiness/", cta: "Financial readiness" },
+  { h: "Explore financing", p: "See what a payment and cash-to-close could look like for your price range.", href: "/affordability/", cta: "Affordability" },
+  { h: "Shop", p: "Organize the homes you're considering and compare them on what matters.", href: "/house-hunting/", cta: "House Hunting" },
+  { h: "Apply", p: "When the numbers make sense, start your application on your own time.", href: "/apply/", cta: "Apply" },
+  { h: "Close", p: "Know your cash to close and what to expect at the finish line.", href: "/cash-to-close/", cta: "Cash to Close" },
+];
+---
+<Page
+  title="Buying a home, one clear step at a time"
+  seoTitle="Buy a Home"
+  description="A calm, step-by-step path to buying a home: understand the process, prepare your finances, explore financing, shop, apply, and close — with the right Kawsah tool at each stage."
+  eyebrow="Purchase"
+  lede="You don't need to understand every mortgage program to buy a home. You need to know what to do next. Here's the whole path — and the one tool that matters at each stage."
+  breadcrumbs={[{ label: "Home", href: "/" }, { label: "Buy a Home" }]}
+>
+  <section class="section tight">
+    <div class="container">
+      <h2>The path from curious to closed</h2>
+      <p class="lede" style="margin-top:.6rem">Six stages. At each one, a single next step — not a wall of options.</p>
+      <ol class="steps" style="margin-top:1.5rem">
+        {stages.map((s) => (
+          <li>
+            <div>
+              <h4>{s.h}</h4>
+              <p>{s.p} <a href={s.href}>{s.cta} →</a></p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section tight paper">
+    <div class="container">
+      <h2>Tools for buying</h2>
+      <p class="lede" style="margin-top:.5rem">Start with whichever question is on your mind right now.</p>
+      <div class="grid cols-4" style="margin-top:1.5rem">
+        {tools.map((r) => <RouteCard route={r} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section tight">
+    <div class="container">
+      <NextStep route={route} />
+      <div style="margin-top:1.5rem"><Disclaimer variant="general" /></div>
+    </div>
+  </section>
+</Page>

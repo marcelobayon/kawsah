@@ -1,0 +1,61 @@
+---
+import Page from "../layouts/Page.astro";
+import LeadForm from "../components/LeadForm.astro";
+import EcosystemCard from "../components/EcosystemCard.astro";
+import NextStep from "../components/NextStep.astro";
+import Disclaimer from "../components/Disclaimer.astro";
+import { getRoute } from "../data/routes.js";
+
+const route = getRoute("KAWSAH_LENDER_PRO");
+const features = [
+  { h: "Productivity", p: "Systems to move files and communication faster, with less manual chasing." },
+  { h: "Client communication", p: "Keep borrowers informed at every step without adding to your day." },
+  { h: "Marketing", p: "Stay in front of referral partners and past clients consistently." },
+  { h: "Self-employed borrower tools", p: "Income-analysis support so complex borrowers don't stall your pipeline." },
+];
+---
+<Page
+  title="Lender Toolkit"
+  seoTitle="Lender Toolkit"
+  description="Resources for mortgage lenders: productivity, client communication, marketing, and self-employed borrower tools — plus professional Mitig8 software via Stop Losing Mortgages."
+  eyebrow="For Lenders"
+  lede="Close more of the borrowers you already touch. Kawsah's lender resources focus on communication, marketing, and the self-employed files that too often slip away."
+  breadcrumbs={[{ label: "Home", href: "/" }, { label: "Professionals", href: "/professionals/" }, { label: "Lenders" }]}
+  viewEvent="professional_route_started"
+  route={route}
+>
+  <section class="section tight">
+    <div class="container">
+      <div class="grid cols-2">
+        {features.map((f) => <div class="card"><h3>{f.h}</h3><p class="muted">{f.p}</p></div>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section tight paper">
+    <div class="container">
+      <h2>Professional income-analysis software</h2>
+      <p class="lede" style="margin-top:.5rem">Want the software behind the self-employed workflow? Mitig8 is available to lenders.</p>
+      <div class="grid cols-2" style="margin-top:1.4rem">
+        <EcosystemCard brandKey="stopLosingMortgages" ctaLabel="Get Mitig8 software" blurb="For lenders who want professional Mitig8 software to analyze self-employed income and stop losing complex files." />
+        <EcosystemCard brandKey="mitig8" ctaLabel="See Mitig8" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section tight">
+    <div class="container narrow">
+      <div class="card">
+        <LeadForm
+          name="lender-toolkit"
+          heading="Get early access"
+          subtext="Tell us where files slow down for you — we'll prioritize accordingly."
+          cta="Join the list"
+          source="lenders"
+        />
+      </div>
+      <div style="margin-top:1.4rem"><NextStep route={route} /></div>
+      <div style="margin-top:1.4rem"><Disclaimer variant="general" /></div>
+    </div>
+  </section>
+</Page>

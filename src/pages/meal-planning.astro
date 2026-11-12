@@ -1,0 +1,25 @@
+---
+import Page from "../layouts/Page.astro";
+import ToolLanding from "../components/ToolLanding.astro";
+---
+<Page
+  title="Meal Planning Dashboard"
+  seoTitle="Meal Planning Dashboard"
+  description="Plan the week's meals, build grocery lists automatically, and waste less food — a simple homeowner-life template you use in your own Notion workspace."
+  eyebrow="Homeowner Tools"
+  lede="Settling into a new home usually means cooking in it. A little planning turns weeknight chaos into something calmer."
+  breadcrumbs={[{ label: "Home", href: "/" }, { label: "Homeowner Tools", href: "/homeowner-tools/" }, { label: "Meal Planning" }]}
+>
+  <ToolLanding
+    routeId="KAWSAH_MEAL_PLANNING"
+    getLabel="Get the meal planner"
+    intro="A lightweight weekly planner that turns 'what's for dinner?' into a five-minute decision — and a grocery list that writes itself."
+    features={[
+      { h: "Plan the week", p: "Map meals to days, with room for leftovers and busy nights." },
+      { h: "Auto grocery list", p: "Build your shopping list from the meals you chose." },
+      { h: "Waste less", p: "Buy what you'll actually use and keep a running pantry view." },
+    ]}
+    flow={["Plan", "Shop", "Cook"]}
+    connects={["KAWSAH_RECIPE_DASHBOARD"]}
+  />
+</Page>

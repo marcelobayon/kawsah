@@ -1,0 +1,25 @@
+---
+import Page from "../layouts/Page.astro";
+import ToolLanding from "../components/ToolLanding.astro";
+---
+<Page
+  title="Life Wiki"
+  seoTitle="Life Wiki"
+  description="A personal knowledge base for the details that run your life and household — accounts, routines, references, and how-tos — in one Notion template you control."
+  eyebrow="Homeowner Tools"
+  lede="A personal wiki for the how-tos, references, and details that keep your household — and your life — running smoothly."
+  breadcrumbs={[{ label: "Home", href: "/" }, { label: "Homeowner Tools", href: "/homeowner-tools/" }, { label: "Life Wiki" }]}
+>
+  <ToolLanding
+    routeId="KAWSAH_LIFE_WIKI"
+    getLabel="Build your Life Wiki"
+    intro="The reference layer of your life: the things you look up again and again, written down once so you (and your household) can always find them."
+    features={[
+      { h: "One source of truth", p: "Household how-tos, key references, and 'where is that?' answers in one place." },
+      { h: "Shareable with your household", p: "So it's not all locked in one person's head." },
+      { h: "Grows with you", p: "Start small and add pages as life throws them at you." },
+    ]}
+    flow={["Capture", "Organize", "Find it fast"]}
+    connects={["KAWSAH_HOME_MANAGEMENT"]}
+  />
+</Page>

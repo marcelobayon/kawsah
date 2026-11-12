@@ -1,0 +1,58 @@
+---
+/* Reusable body for pages whose job is to route into an ecosystem partner
+   (e.g. NorthReserve) after framing the decision inside Kawsah. */
+import EcosystemCard from "./EcosystemCard.astro";
+import NextStep from "./NextStep.astro";
+import Disclaimer from "./Disclaimer.astro";
+import Button from "./Button.astro";
+import { getRoute } from "../data/routes.js";
+import { resolveLink } from "../lib/destinations.js";
+
+const { routeId, intro, features = [], flow = [], boundary } = Astro.props;
+const route = getRoute(routeId);
+const brandKey = route?.ecosystemKey || "northReserve";
+const link = resolveLink(brandKey);
+---
+<section class="section tight">
+  <div class="container">
+    {intro && <p class="lede measure">{intro}</p>}
+
+    {flow.length > 0 && (
+      <div class="flow" style="margin-top:1.6rem">
+        {flow.map((n, i) => <>{i > 0 && <span class="sep" aria-hidden="true">→</span>}<span class="node">{n}</span></>)}
+      </div>
+    )}
+
+    {features.length > 0 && (
+      <div class="grid cols-3" style="margin-top:2rem">
+        {features.map((f) => (
+          <div class="card"><h3>{f.h}</h3><p class="muted">{f.p}</p></div>
+        ))}
+      </div>
+    )}
+  </div>
+</section>
+
+<section class="section tight paper">
+  <div class="container">
+    <div class="grid cols-2" style="align-items:center">
+      <div>
+        <h2>{route.primaryCTA}</h2>
+        {boundary && <p class="lede" style="margin-top:.5rem">{boundary}</p>}
+        {link && (
+          <div class="btn-row" style="margin-top:1.2rem">
+            <Button href={link.url} variant="primary" size="lg" external={true} gaEvent="ecosystem_referral_clicked" gaBrand={brandKey} gaCta={route.primaryCTA}>{route.primaryCTA}</Button>
+          </div>
+        )}
+      </div>
+      <EcosystemCard brandKey={brandKey} ctaLabel={route.primaryCTA} />
+    </div>
+  </div>
+</section>
+
+<section class="section tight">
+  <div class="container">
+    <NextStep route={route} />
+    <div style="margin-top:1.4rem"><Disclaimer variant="general" /></div>
+  </div>
+</section>

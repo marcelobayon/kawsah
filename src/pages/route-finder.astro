@@ -1,0 +1,261 @@
+---
+import Page from "../layouts/Page.astro";
+import Disclaimer from "../components/Disclaimer.astro";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "Kawsah Route Finder",
+  applicationCategory: "FinanceApplication",
+  operatingSystem: "Web",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+  description:
+    "Answer a few questions and get one clear next step for your mortgage or homeownership journey. Educational navigation only — not an eligibility determination.",
+};
+---
+<Page
+  title="Find My Path"
+  seoTitle="Route Finder — Find your next step"
+  description="Answer a few quick questions and Kawsah points you to one clear next step — a tool, a guide, or the right financing path. Educational navigation, never an eligibility decision."
+  eyebrow="Route Finder"
+  lede="Not sure where to start? Answer a few questions — one at a time — and we'll point you to the single best next step for your situation."
+  breadcrumbs={[{ label: "Home", href: "/" }, { label: "Find My Path" }]}
+  jsonLd={jsonLd}
+>
+  <section class="section tight">
+    <div class="container narrow">
+      <div id="route-finder" class="rf" aria-live="polite">
+        <!-- progressively enhanced; JS renders here -->
+        <div class="rf-loading card">Loading the route finder…</div>
+      </div>
+
+      <noscript>
+        <div class="card">
+          <h3>Pick where you are</h3>
+          <p class="muted">The interactive finder needs JavaScript. In the meantime, jump straight to a path:</p>
+          <div class="door-list" style="margin-top:1rem">
+            <a class="door-item" href="/first-time-buyer/"><span>I'm a first-time buyer</span><span class="arrow">→</span></a>
+            <a class="door-item" href="/self-employed/"><span>I'm self-employed</span><span class="arrow">→</span></a>
+            <a class="door-item" href="/refinance/"><span>I want to refinance</span><span class="arrow">→</span></a>
+            <a class="door-item" href="/financial-readiness/"><span>Not sure I'm financially ready</span><span class="arrow">→</span></a>
+            <a class="door-item" href="/house-hunting/"><span>I'm already looking at homes</span><span class="arrow">→</span></a>
+          </div>
+        </div>
+      </noscript>
+
+      <div style="margin-top:1.6rem"><Disclaimer variant="route" /></div>
+    </div>
+  </section>
+</Page>
+
+<style>
+  .rf-card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(1.25rem, 1rem + 1vw, 2rem); box-shadow: var(--shadow-sm); }
+  .rf-progress { font-size: var(--step--1); color: var(--ink-55); font-weight: 650; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.6rem; }
+  .rf-q { font-family: var(--font-display); font-size: var(--step-2); color: var(--teal-900); margin-bottom: 1.1rem; }
+  .rf-options { display: grid; gap: 0.6rem; border: 0; padding: 0; margin: 0; }
+  .rf-opt { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; width: 100%; text-align: left; padding: 1rem 1.15rem; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--white); color: var(--teal-900); font-weight: 600; font-size: var(--step-0); cursor: pointer; transition: background 0.15s var(--ease), border-color 0.15s var(--ease), transform 0.15s var(--ease); }
+  .rf-opt:hover { background: var(--teal-50); border-color: var(--teal-400); transform: translateX(2px); }
+  .rf-opt .arrow { color: var(--teal-400); font-weight: 700; }
+  .rf-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 1.2rem; }
+  .rf-result .eyebrow { margin-bottom: 0.4rem; }
+  .rf-result h2 { font-size: var(--step-3); }
+  .rf-next { border-left: 4px solid var(--teal-400); background: var(--paper); padding: 0.9rem 1.1rem; border-radius: var(--radius-sm); margin: 1.2rem 0; }
+  .rf-next .nlabel { font-size: var(--step--1); text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-55); font-weight: 650; }
+  .rf-secondary { list-style: none; padding: 0; display: grid; gap: 0.5rem; margin-top: 0.5rem; }
+  .rf-secondary a { display: flex; justify-content: space-between; gap: 0.75rem; padding: 0.75rem 1rem; border: 1px solid var(--line); border-radius: var(--radius-sm); text-decoration: none; color: var(--teal-900); font-weight: 600; }
+  .rf-secondary a:hover { background: var(--teal-50); border-color: var(--teal-400); text-decoration: none; }
+  .rf-proquestions { margin-top: 1rem; padding-left: 1.15rem; color: var(--ink-70); font-size: var(--step--1); }
+  .rf-proquestions li { margin-top: 0.3rem; }
+</style>
+
+<script>
+  import { findKawsahRoute } from "../lib/routeEngine.js";
+  import { track } from "../lib/analytics.js";
+
+  const QUESTIONS = [
+    {
+      id: "goal",
+      q: "What brings you to Kawsah today?",
+      opts: [
+        { l: "Buy a home", set: { goal: "purchase" } },
+        { l: "Refinance my current mortgage", set: { goal: "refinance" } },
+        { l: "Buy an investment property", set: { goal: "investment" } },
+        { l: "Fund or grow a business", set: { goal: "business" } },
+        { l: "I'm not sure yet", set: { goal: "not_sure" } },
+      ],
+    },
+    {
+      id: "stage",
+      q: "Where are you in the process?",
+      appliesIf: (c) => c.goal === "purchase" || c.goal === "not_sure",
+      opts: [
+        { l: "Just starting — this would be my first home", set: { firstTime: "yes", stage: "planning" } },
+        { l: "Still planning, but I've owned before", set: { stage: "planning" } },
+        { l: "I'm actively looking at homes", set: { stage: "shopping" } },
+        { l: "I'm ready to apply", set: { stage: "ready" } },
+        { l: "Honestly, not sure I'm financially ready", set: { challenge: "financial_readiness" } },
+      ],
+    },
+    {
+      id: "income",
+      q: "How do you earn most of your income?",
+      appliesIf: (c) => c.goal !== "business" && c.challenge !== "financial_readiness",
+      opts: [
+        { l: "W‑2 employee", set: { selfEmployed: "no" } },
+        { l: "Self‑employed / business owner", set: { selfEmployed: "yes" } },
+        { l: "A mix of both", set: { selfEmployed: "yes" } },
+      ],
+    },
+    {
+      id: "docs",
+      q: "How would you document that income?",
+      appliesIf: (c) => c.selfEmployed === "yes",
+      opts: [
+        { l: "With my tax returns", set: { incomeDoc: "tax_returns" } },
+        { l: "Bank statements or other alternative docs", set: { incomeDoc: "alternative" } },
+        { l: "I'm honestly not sure", set: { incomeDoc: "na" } },
+      ],
+    },
+    {
+      id: "special",
+      q: "Do any of these apply?",
+      appliesIf: (c) => c.goal !== "business" && c.goal !== "refinance" && c.challenge !== "financial_readiness",
+      opts: [
+        { l: "I'm a foreign national (no U.S. credit history)", set: { foreignNational: "yes" } },
+        { l: "The property has 5–10 units", set: { units: "5_10" } },
+        { l: "I need to buy before I sell my current home", set: { challenge: "timing" } },
+        { l: "None of these", set: {} },
+      ],
+    },
+  ];
+
+  const root = document.getElementById("route-finder");
+  if (root) {
+    let ctx = {};
+    const answered = []; // { id, snapshot }
+
+    // Prefill from ?goal=
+    const params = new URLSearchParams(location.search);
+    const g = params.get("goal");
+    const validGoals = ["purchase", "refinance", "investment", "business", "not_sure"];
+    if (g && validGoals.includes(g)) {
+      ctx.goal = g;
+      answered.push({ id: "goal", snapshot: {} });
+    }
+
+    let started = answered.length > 0;
+
+    function nextQuestion() {
+      return QUESTIONS.find(
+        (q) => !answered.some((a) => a.id === q.id) && (!q.appliesIf || q.appliesIf(ctx))
+      );
+    }
+
+    function esc(s) {
+      return String(s).replace(/[&<>"]/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[m]));
+    }
+
+    function renderQuestion(q) {
+      const step = answered.filter((a) => a.id !== "goal" || !params.get("goal")).length + 1;
+      root.innerHTML = `
+        <div class="rf-card">
+          <p class="rf-progress">Question ${step}</p>
+          <fieldset class="rf-fieldset">
+            <legend class="rf-q">${esc(q.q)}</legend>
+            <div class="rf-options">
+              ${q.opts
+                .map((o, i) => `<button class="rf-opt" type="button" data-i="${i}"><span>${esc(o.l)}</span><span class="arrow" aria-hidden="true">→</span></button>`)
+                .join("")}
+            </div>
+          </fieldset>
+          <div class="rf-nav">
+            ${answered.length ? '<button class="btn btn-ghost" type="button" data-back>← Back</button>' : "<span></span>"}
+            <button class="btn btn-ghost" type="button" data-restart>Start over</button>
+          </div>
+        </div>`;
+      root.querySelectorAll(".rf-opt").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const o = q.opts[Number(btn.dataset.i)];
+          answered.push({ id: q.id, snapshot: { ...ctx } });
+          ctx = { ...ctx, ...o.set };
+          track("route_question_answered", { question_id: q.id });
+          advance();
+        });
+      });
+      wireNav();
+      const first = root.querySelector(".rf-opt");
+      if (first && started) first.focus();
+      started = true;
+    }
+
+    function renderResult() {
+      const res = findKawsahRoute(ctx);
+      track("route_completed", {
+        route_id: res.routeId,
+        lifecycle_stage: res.lifecycleStage,
+        intent_category: res.intentCategory,
+      });
+      track("route_recommendation_viewed", {
+        route_id: res.routeId,
+        lifecycle_stage: res.lifecycleStage,
+        intent_category: res.intentCategory,
+      });
+      const p = res.primary;
+      const secondary = (res.secondaryRoutes || [])
+        .map(
+          (s) =>
+            `<a href="${esc(s.url)}" ${s.external ? 'target="_blank" rel="noopener"' : ""} data-ga-event="route_cta_clicked" data-ga-route="${esc(s.routeId)}" data-ga-cta="${esc(s.title)}"><span>${esc(s.title)}</span><span class="arrow" aria-hidden="true">→</span></a>`
+        )
+        .join("");
+      const proq = (res.questionsForProfessional || []).map((q) => `<li>${esc(q)}</li>`).join("");
+      root.innerHTML = `
+        <div class="rf-card rf-result">
+          <p class="eyebrow">Your recommended path</p>
+          <h2>${esc(res.recommendedTool)}</h2>
+          <p class="muted">Based on your answers, this is the clearest place to start. It's a direction to explore — not a decision about what you qualify for.</p>
+          <div class="btn-row" style="margin-top:1.1rem">
+            <a class="btn btn-primary ${p.external ? "ext" : ""}" href="${esc(p.url)}" ${p.external ? 'target="_blank" rel="noopener"' : ""} data-ga-event="route_cta_clicked" data-ga-route="${esc(p.routeId)}" data-ga-cta="${esc(p.label)}" ${p.destination ? `data-ga-brand="${esc(p.destination)}"` : ""}>${esc(p.label)}</a>
+          </div>
+          <div class="rf-next">
+            <div class="nlabel">The next question to answer</div>
+            <p style="margin-top:.2rem">${esc(res.nextQuestion)}</p>
+          </div>
+          ${secondary ? `<p class="result-label">Also worth a look</p><ul class="rf-secondary">${secondary}</ul>` : ""}
+          ${proq ? `<p class="result-label" style="margin-top:1.2rem">Good questions to bring to a conversation</p><ul class="rf-proquestions">${proq}</ul>` : ""}
+          <div class="rf-nav">
+            <button class="btn btn-ghost" type="button" data-back>← Change an answer</button>
+            <button class="btn btn-outline sm" type="button" data-restart>Start over</button>
+          </div>
+        </div>`;
+      wireNav();
+      root.querySelector("h2")?.focus?.();
+    }
+
+    function wireNav() {
+      const back = root.querySelector("[data-back]");
+      const restart = root.querySelector("[data-restart]");
+      if (back)
+        back.addEventListener("click", () => {
+          const last = answered.pop();
+          if (last) ctx = last.snapshot;
+          advance();
+        });
+      if (restart)
+        restart.addEventListener("click", () => {
+          ctx = {};
+          answered.length = 0;
+          started = true;
+          advance();
+        });
+    }
+
+    function advance() {
+      const q = nextQuestion();
+      if (q) renderQuestion(q);
+      else renderResult();
+    }
+
+    track("route_started", {});
+    advance();
+  }
+</script>

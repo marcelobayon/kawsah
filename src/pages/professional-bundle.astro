@@ -1,0 +1,26 @@
+---
+import Page from "../layouts/Page.astro";
+import ToolLanding from "../components/ToolLanding.astro";
+---
+<Page
+  title="Professional Bundle"
+  seoTitle="Professional Bundle"
+  description="The Realtor and Lender toolkits together — productivity, marketing, client tools, and self-employed borrower support for real estate professionals. Pricing coming soon."
+  eyebrow="Bundle"
+  lede="For Realtors and lenders who want the whole toolkit: the productivity, marketing, and client resources that help you grow — in one bundle."
+  breadcrumbs={[{ label: "Home", href: "/" }, { label: "Professional Bundle" }]}
+>
+  <ToolLanding
+    routeId="KAWSAH_PRO_BUNDLE"
+    productKey="professionalBundle"
+    notion={false}
+    getLabel="Get the Professional Toolkit"
+    intro="Both professional toolkits together — everything from the Realtor and Lender resources, plus the self-employed borrower tools that keep complex files moving."
+    features={[
+      { h: "Realtor toolkit", p: "Productivity, marketing, content, and client tools built from real workflow." },
+      { h: "Lender toolkit", p: "Communication, marketing, and self-employed borrower support." },
+      { h: "Grow your business", p: "One set of resources aimed squarely at more closings and better clients." },
+    ]}
+    connects={["KAWSAH_REALTOR_PRO", "KAWSAH_LENDER_PRO"]}
+  />
+</Page>

@@ -1,0 +1,42 @@
+---
+import Page from "../layouts/Page.astro";
+import RouteCard from "../components/RouteCard.astro";
+import Button from "../components/Button.astro";
+import { routes as pickRoutes, HOMEOWNER_TOOLS } from "../data/assets.js";
+
+const tools = pickRoutes(HOMEOWNER_TOOLS);
+---
+<Page
+  title="Homeowner Tools"
+  seoTitle="Homeowner Tools"
+  description="Kawsah doesn't end at closing. Organize your home, belongings, smart devices, meals, and household knowledge — then come back when it's time to refinance or move."
+  eyebrow="After Closing"
+  lede="Kawsah doesn't have to end at closing. Once you're in, these tools help you run the home you worked so hard to buy."
+  breadcrumbs={[{ label: "Home", href: "/" }, { label: "Homeowner Tools" }]}
+>
+  <section class="section tight">
+    <div class="container">
+      <div class="flow" style="margin-bottom:2rem">
+        <span class="node">Mortgage</span><span class="sep" aria-hidden="true">→</span>
+        <span class="node">Closing</span><span class="sep" aria-hidden="true">→</span>
+        <span class="node">Homeownership</span><span class="sep" aria-hidden="true">→</span>
+        <span class="node">Home management</span><span class="sep" aria-hidden="true">→</span>
+        <span class="node">Future mortgage</span>
+      </div>
+      <div class="grid cols-3">
+        {tools.map((r) => <RouteCard route={r} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section tight paper">
+    <div class="container center">
+      <h2>Thinking about your next move?</h2>
+      <p class="lede center">When it's time to refinance or buy again, your Kawsah path is right here.</p>
+      <div class="btn-row" style="justify-content:center;margin-top:1.2rem">
+        <Button href="/refinance/" variant="primary">Explore refinancing</Button>
+        <Button href="/route-finder/" variant="outline" gaEvent="route_started" gaAsset="homeowner_tools">Find my next path</Button>
+      </div>
+    </div>
+  </section>
+</Page>

@@ -1,0 +1,26 @@
+---
+import Page from "../layouts/Page.astro";
+import ToolLanding from "../components/ToolLanding.astro";
+---
+<Page
+  title="Purchase Playbook — your homebuying command center"
+  seoTitle="Purchase Playbook"
+  description="A step-by-step homebuying command center: understand the process, know your numbers, and always see the next move — with links to the right tool at each stage."
+  eyebrow="Purchase Playbook"
+  lede="One place that holds the whole homebuying process together — so you always know where you are and what to do next."
+  breadcrumbs={[{ label: "Home", href: "/" }, { label: "Purchase Playbook" }]}
+>
+  <ToolLanding
+    routeId="KAWSAH_PURCHASE_PLAYBOOK"
+    productKey="purchasePlaybook"
+    getLabel="Open the Purchase Playbook"
+    intro="The Playbook walks the full journey — Understand, Prepare, Explore financing, Shop, Apply, Close — and points you to the exact Kawsah tool for wherever you are today. It's an orientation map, not a promise about any specific loan program."
+    features={[
+      { h: "The whole process, in order", p: "See every stage from first curiosity to closing day, so nothing catches you off guard." },
+      { h: "Know your numbers", p: "Jump straight to affordability, payment, and cash-to-close estimates when a stage calls for them." },
+      { h: "Understand your options", p: "Financing categories explained plainly — as education, with current program details confirmed by a professional, never assumed." },
+    ]}
+    flow={["Understand", "Prepare", "Explore financing", "Shop", "Apply", "Close"]}
+    connects={["KAWSAH_FIRST_TIME_BUYER", "KAWSAH_AFFORDABILITY", "MITIG8_SELF_EMPLOYED"]}
+  />
+</Page>

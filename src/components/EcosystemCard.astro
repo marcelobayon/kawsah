@@ -1,0 +1,31 @@
+---
+import { resolveLink } from "../lib/destinations.js";
+import { CONFIG } from "../config/config.js";
+const { brandKey, ctaLabel, blurb } = Astro.props;
+const link = resolveLink(brandKey);
+const dest = CONFIG.destinations[brandKey] || {};
+const name = dest.name || brandKey;
+const text = blurb || dest.blurb || "";
+const label = ctaLabel || `Explore ${name}`;
+---
+<article class="card eco">
+  <div class="eco-name">{name}</div>
+  {text && <p class="eco-blurb">{text}</p>}
+  <div class="card-cta">
+    {link ? (
+      <a
+        class="btn btn-accent sm ext"
+        href={link.url}
+        target="_blank"
+        rel="noopener"
+        data-ga-event="ecosystem_referral_clicked"
+        data-ga-brand={brandKey}
+        data-ga-cta={label}
+      >
+        {label}
+      </a>
+    ) : (
+      <span class="muted">Link coming soon</span>
+    )}
+  </div>
+</article>

@@ -1,0 +1,24 @@
+---
+import Page from "../layouts/Page.astro";
+import EcosystemLanding from "../components/EcosystemLanding.astro";
+---
+<Page
+  title="See where your money goes"
+  seoTitle="Expense Tracker"
+  description="Understand your spending before taking on a mortgage. Kawsah points you to NorthReserve's expense tracking to build a clear picture of your financial position."
+  eyebrow="Expense Tracker"
+  lede="A mortgage payment lands on top of everything you already spend. Seeing that clearly first is one of the calmest things you can do before buying."
+  breadcrumbs={[{ label: "Home", href: "/" }, { label: "Expense Tracker" }]}
+>
+  <EcosystemLanding
+    routeId="NORTHRESERVE_EXPENSE_TRACKING"
+    intro="Tracking your spending won't change what you qualify for — but it changes how confident you feel taking on a payment, and where you might free up room before you do."
+    features={[
+      { h: "Know your baseline", p: "What you actually spend in a normal month, categories and all." },
+      { h: "Find the room", p: "Spot the flexible spending that could become a down payment or a cushion." },
+      { h: "Feel the payment first", p: "Test how a future housing payment would sit alongside everything else." },
+    ]}
+    flow={["Expense tracker", "Financial Mountain", "Home-buying readiness", "Kawsah"]}
+    boundary="This is about clarity, not qualification. Use NorthReserve to track spending and build reserves; come back to Kawsah when you're ready to talk financing."
+  />
+</Page>

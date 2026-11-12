@@ -1,0 +1,72 @@
+---
+import "../styles/global.css";
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { CONFIG } from "../config/config.js";
+
+const { title, description, image, type, noindex, rawTitle, jsonLd } = Astro.props;
+const gaId = CONFIG.analytics?.enabled ? CONFIG.analytics.ga4Id : "";
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead
+      title={title}
+      description={description}
+      image={image}
+      type={type}
+      noindex={noindex}
+      rawTitle={rawTitle}
+      jsonLd={jsonLd}
+    />
+    {gaId && (
+      <>
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
+        <script is:inline define:vars={{ gaId }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag() { dataLayer.push(arguments); }
+          window.gtag = window.gtag || gtag;
+          gtag("js", new Date());
+          gtag("config", gaId);
+        </script>
+      </>
+    )}
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+
+    <script>
+      import { initClickTracking, track } from "../lib/analytics.js";
+      import { initLeadForms } from "../lib/forms.js";
+      initClickTracking();
+      initLeadForms(track);
+
+      // Per-page view event (declared by a hidden [data-page-view] element).
+      const pv = document.querySelector("[data-page-view]");
+      if (pv) {
+        track(pv.getAttribute("data-page-view"), {
+          route_id: pv.getAttribute("data-pv-route") || undefined,
+          lifecycle_stage: pv.getAttribute("data-pv-stage") || undefined,
+          intent_category: pv.getAttribute("data-pv-intent") || undefined,
+          asset_type: pv.getAttribute("data-pv-asset") || undefined,
+        });
+      }
+
+      // Template lead forms: tool_started (first input) + tool_completed (submit).
+      document.querySelectorAll("form[data-kawsah-form][data-tool]").forEach((f) => {
+        let started = false;
+        const tool = f.getAttribute("data-tool");
+        f.addEventListener("input", () => {
+          if (!started) { started = true; track("tool_started", { tool_name: tool }); }
+        });
+        f.addEventListener("submit", () => track("tool_completed", { tool_name: tool }));
+      });
+    </script>
+  </body>
+</html>

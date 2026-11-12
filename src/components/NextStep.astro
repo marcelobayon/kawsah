@@ -1,0 +1,24 @@
+---
+import { resolveNext } from "../data/routes.js";
+const { route, label = "Your next step" } = Astro.props;
+const next = route ? resolveNext(route) : null;
+---
+{route && next && (
+  <div class="next-step">
+    <div>
+      <div class="nlabel">{label}</div>
+      <p class="nq">{route.nextQuestion}</p>
+    </div>
+    <a
+      class={`btn btn-primary ${next.external ? "ext" : ""}`}
+      href={next.href}
+      target={next.external ? "_blank" : undefined}
+      rel={next.external ? "noopener" : undefined}
+      data-ga-event="route_cta_clicked"
+      data-ga-route={route.id}
+      data-ga-cta={next.label}
+    >
+      {next.label}
+    </a>
+  </div>
+)}

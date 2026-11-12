@@ -1,0 +1,25 @@
+---
+import Page from "../layouts/Page.astro";
+import ToolLanding from "../components/ToolLanding.astro";
+---
+<Page
+  title="House Management Hub"
+  seoTitle="House Management Hub"
+  description="An organized home operating system: routines, tasks, bills, contacts, inventory, and essential documents in one place. A Notion template you own and control."
+  eyebrow="Homeowner Tools"
+  lede="Owning a home is a lot to keep track of. The House Management Hub is a calm operating system for the running of your household."
+  breadcrumbs={[{ label: "Home", href: "/" }, { label: "Homeowner Tools", href: "/homeowner-tools/" }, { label: "House Management" }]}
+>
+  <ToolLanding
+    routeId="KAWSAH_HOME_MANAGEMENT"
+    getLabel="Set up the Home Hub"
+    intro="One home base for routines, tasks, bills, key contacts, and the documents you scramble for at the worst moments — set up once, used for years."
+    features={[
+      { h: "Routines & tasks", p: "Seasonal maintenance and recurring to-dos, so nothing important slips." },
+      { h: "Bills & contacts", p: "Track what's due and keep every vendor, warranty, and account in one place." },
+      { h: "Essential documents", p: "A home for the paperwork you'll want fast when you need it." },
+    ]}
+    flow={["Move in", "Organize", "Maintain", "Refinance later"]}
+    connects={["KAWSAH_HOME_INVENTORY", "KAWSAH_SMART_HOME"]}
+  />
+</Page>
